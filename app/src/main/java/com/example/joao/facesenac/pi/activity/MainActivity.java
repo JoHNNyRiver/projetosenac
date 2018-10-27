@@ -1,4 +1,4 @@
-package com.example.joao.facesenac.activity;
+package com.example.joao.facesenac.pi.activity;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.joao.facesenac.R;
-import com.example.joao.facesenac.activity.CadastroActivity;
+import com.example.joao.facesenac.pi.activity.CadastroActivity;
 
 public class MainActivity extends AppCompatActivity {
     private TextView linkCad;
