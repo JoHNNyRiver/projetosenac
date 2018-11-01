@@ -1,4 +1,4 @@
-package com.example.joao.facesenac.pi.activity;
+package com.example.joao.facesenac.pi.activity.activity;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -23,6 +23,7 @@ public class CadastroActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(login);
+                finish();
             }
         });
     }

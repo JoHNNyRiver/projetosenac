@@ -3,20 +3,23 @@
     package="com.example.joao.facesenac">
 
     <application
+        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".pi.activity.MainActivity">
+        <activity android:name=".pi.activity.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".pi.activity.CadastroActivity"></activity>
+        <activity android:name=".pi.activity.activity.CadastroActivity" />
+        <activity android:name=".pi.activity.activity.FeedActivity"></activity>
     </application>
 
+    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
 </manifest>
