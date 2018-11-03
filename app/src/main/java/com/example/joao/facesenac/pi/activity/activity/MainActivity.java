@@ -11,16 +11,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.joao.facesenac.R;
-import com.example.joao.facesenac.pi.activity.activity.CadastroActivity;
 import com.example.joao.facesenac.pi.activity.interfaces.ApiUsers;
-import com.example.joao.facesenac.pi.activity.model.Users;
+import com.example.joao.facesenac.pi.activity.model.PostUserLogin;
 import com.google.gson.Gson;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
     private TextView linkCad;
@@ -66,20 +69,35 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
+                btnEntrar.setEnabled(false);
+                txtLogin.setEnabled(false);
+                txtSenha.setEnabled(false);
+                linkCad.setEnabled(false);
+
                 progressBar.setVisibility(View.VISIBLE);
 
                 Retrofit usersApi = new Retrofit.Builder()
                         .baseUrl("https://pi4facenac.azurewebsites.net/pi4/api/")
+                        .addConverterFactory(ScalarsConverterFactory.create())
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
 
                 ApiUsers api = usersApi.create(ApiUsers.class);
-                Call<Users> callUsers = api.postLogin(new Users(strLogin, strSenha));
+                JSONObject jsonObject = new JSONObject();
 
-                Callback<Users> callback = new Callback<Users>() {
+                try {
+                    jsonObject.put("email", strLogin);
+                    jsonObject.put("senha", strSenha);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                Call<PostUserLogin> callUsers = api.postLogin(jsonObject.toString());
+
+                Callback<PostUserLogin> callback = new Callback<PostUserLogin>() {
                     @Override
-                    public void onResponse(Call<Users> call, Response<Users> response) {
-                        Users user = response.body();
+                    public void onResponse(Call<PostUserLogin> call, Response<PostUserLogin> response) {
+                        PostUserLogin user = response.body();
                         Intent feed = new Intent(MainActivity.this, FeedActivity.class);
 
                         if (response.isSuccessful() && user != null) {
@@ -89,12 +107,17 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<Users> call, Throwable t) {
+                    public void onFailure(Call<PostUserLogin> call, Throwable t) {
                         t.printStackTrace();
                         Toast.makeText(MainActivity.this,
                                 "Houve um erro, tente novamente!",
                                 Toast.LENGTH_LONG).show();
+
                         progressBar.setVisibility(View.GONE);
+                        btnEntrar.setEnabled(true);
+                        txtLogin.setEnabled(true);
+                        txtSenha.setEnabled(true);
+                        linkCad.setEnabled(true);
                     }
                 };
 
