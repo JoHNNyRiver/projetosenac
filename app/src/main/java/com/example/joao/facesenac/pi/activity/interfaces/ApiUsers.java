@@ -23,5 +23,5 @@ public interface ApiUsers {
         "Content-Type: application/json;charset=utf-8"
     })
     @POST("users")
-    Call<PostUserSignup> postSignup(@Body SignupBody info);
+    Call<Long> postSignup(@Body SignupBody info);
 }

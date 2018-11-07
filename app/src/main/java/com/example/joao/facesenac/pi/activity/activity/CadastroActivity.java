@@ -132,7 +132,7 @@ public class CadastroActivity extends AppCompatActivity {
                 progressBarCadastro.setVisibility(View.VISIBLE);
 
                 Retrofit usersApi = new Retrofit.Builder()
-                        .baseUrl("https://pi4facenac.azurewebsites.net/pi4/api/")
+                        .baseUrl("https://pi4facenac.azurewebsites.net/PI4/api/")
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
 
@@ -142,35 +142,46 @@ public class CadastroActivity extends AppCompatActivity {
                 signupBody.setEmail(strEmail);
                 signupBody.setNome(strNome);
                 signupBody.setSenha(strSenha);
-                signupBody.setRepetirSenha(strSenhaTwo);
+
                 signupBody.setFoto(imageProfileF);
 
-                Call<PostUserSignup> callSignup = api.postSignup(signupBody);
+                Call<Long> callSignup = api.postSignup(signupBody);
 
-                Callback<PostUserSignup> callback = new Callback<PostUserSignup>() {
+                Callback<Long> callback = new Callback<Long>() {
                     @Override
-                    public void onResponse(Call<PostUserSignup> call, Response<PostUserSignup> response) {
-                        PostUserSignup res = response.body();
-                        Intent feed = new Intent(CadastroActivity.this, FeedActivity.class);
+                    public void onResponse(Call<Long> call, Response<Long> response) {
+                        if (response.code() == 200) {
+                            Long res = response.body();
+                            Intent feed = new Intent(CadastroActivity.this, FeedActivity.class);
 
-                        if (response.isSuccessful() && res != null) {
-                            startActivity(feed);
-                            finish();
-                        } else {
-                            Toast.makeText(CadastroActivity.this,"Houve um erro,  tente novamente!", Toast.LENGTH_LONG).show();
+                            if (response.isSuccessful() && res != null) {
+                                startActivity(feed);
+                                finish();
+                            } else {
+                                Toast.makeText(CadastroActivity.this, "Houve um erro,  tente novamente!", Toast.LENGTH_LONG).show();
 
-                            progressBarCadastro.setVisibility(View.GONE);
-                            btnCadastro.setEnabled(true);
-                            txtNome.setEnabled(true);
-                            txtEmail.setEnabled(true);
-                            txtSenha.setEnabled(true);
-                            txtSenhaTwo.setEnabled(true);
-                            backLogin.setEnabled(true);
+                                progressBarCadastro.setVisibility(View.GONE);
+                                btnCadastro.setEnabled(true);
+                                txtNome.setEnabled(true);
+                                txtEmail.setEnabled(true);
+                                txtSenha.setEnabled(true);
+                                txtSenhaTwo.setEnabled(true);
+                                backLogin.setEnabled(true);
+                            }
+                        } if (response.code() == 406) {
+                            Toast.makeText(CadastroActivity.this,
+                                    "mane ja existe!",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            Toast.makeText(CadastroActivity.this,
+                                    "fiz caca",
+                                    Toast.LENGTH_LONG).show();
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<PostUserSignup> call, Throwable t) {
+                    public void onFailure(Call<Long> call, Throwable t) {
                         t.printStackTrace();
 
                         Toast.makeText(CadastroActivity.this,

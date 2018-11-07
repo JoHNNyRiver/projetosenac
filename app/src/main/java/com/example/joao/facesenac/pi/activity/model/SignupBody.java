@@ -4,7 +4,7 @@ public class SignupBody {
     private String nome;
     private String email;
     private String senha;
-    private String repetirSenha;
+    private String foto;
 
     public String getFoto() {
         return foto;
@@ -14,7 +14,7 @@ public class SignupBody {
         this.foto = foto;
     }
 
-    private String foto;
+
 
     public String getNome() {
         return nome;
@@ -40,11 +40,5 @@ public class SignupBody {
         this.senha = senha;
     }
 
-    public String getRepetirSenha() {
-        return repetirSenha;
-    }
 
-    public void setRepetirSenha(String repetirSenha) {
-        this.repetirSenha = repetirSenha;
-    }
 }
