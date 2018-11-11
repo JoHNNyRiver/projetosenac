@@ -18,7 +18,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".pi.activity.activity.CadastroActivity" />
-        <activity android:name=".pi.activity.activity.FeedActivity"></activity>
+        <activity android:name=".pi.activity.activity.FeedActivity"
+            android:theme="@style/AppThemeTwo"></activity>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET"></uses-permission>

@@ -2,6 +2,7 @@ package com.example.joao.facesenac.pi.activity.interfaces;
 
 import com.example.joao.facesenac.pi.activity.model.PostUserLogin;
 import com.example.joao.facesenac.pi.activity.model.PostUserSignup;
+import com.example.joao.facesenac.pi.activity.model.SigninBody;
 import com.example.joao.facesenac.pi.activity.model.SignupBody;
 
 import retrofit2.Call;
@@ -15,8 +16,8 @@ public interface ApiUsers {
         "Accept: application/json;charset=utf-8",
         "Content-Type: application/json;charset=utf-8"
     })
-    @POST("/login")
-    Call<PostUserLogin> postLogin(@Body String user);
+    @POST("login")
+    Call<PostUserLogin> postLogin(@Body SigninBody user);
 
     @Headers({
         "Accept: application/json;charset=utf-8",

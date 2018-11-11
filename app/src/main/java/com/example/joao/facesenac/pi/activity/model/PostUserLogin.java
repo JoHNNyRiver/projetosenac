@@ -3,7 +3,7 @@ package com.example.joao.facesenac.pi.activity.model;
 public class PostUserLogin {
     private Long id;
     private String nome, email, senha;
-    private byte[] foto;
+    private String foto;
 
     public Long getId() {
         return id;
@@ -37,11 +37,11 @@ public class PostUserLogin {
         this.senha = senha;
     }
 
-    public byte[] getFoto() {
+    public String getFoto() {
         return foto;
     }
 
-    public void setFoto(byte[] foto) {
+    public void setFoto(String foto) {
         this.foto = foto;
     }
 }

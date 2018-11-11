@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.example.joao.facesenac.R;
 import com.example.joao.facesenac.pi.activity.interfaces.ApiUsers;
 import com.example.joao.facesenac.pi.activity.model.PostUserLogin;
+import com.example.joao.facesenac.pi.activity.model.SigninBody;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -77,32 +78,56 @@ public class MainActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.VISIBLE);
 
                 Retrofit usersApi = new Retrofit.Builder()
-                        .baseUrl("https://pi4facenac.azurewebsites.net/pi4/api/")
+                        .baseUrl("https://pi4facenac.azurewebsites.net/PI4/api/")
                         .addConverterFactory(ScalarsConverterFactory.create())
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
 
                 ApiUsers api = usersApi.create(ApiUsers.class);
-                JSONObject jsonObject = new JSONObject();
+                SigninBody signinBody = new SigninBody();
 
-                try {
-                    jsonObject.put("email", strLogin);
-                    jsonObject.put("senha", strSenha);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                signinBody.setEmail(strLogin);
+                signinBody.setSenha(strSenha);
 
-                Call<PostUserLogin> callUsers = api.postLogin(jsonObject.toString());
+                Call<PostUserLogin> callUsers = api.postLogin(signinBody);
 
                 Callback<PostUserLogin> callback = new Callback<PostUserLogin>() {
                     @Override
                     public void onResponse(Call<PostUserLogin> call, Response<PostUserLogin> response) {
-                        PostUserLogin user = response.body();
-                        Intent feed = new Intent(MainActivity.this, FeedActivity.class);
+                        if (response.code() == 200) {
+                            PostUserLogin user = response.body();
+                            Intent feed = new Intent(MainActivity.this, FeedActivity.class);
 
-                        if (response.isSuccessful() && user != null) {
-                            startActivity(feed);
-                            finish();
+                            if (response.isSuccessful() && user != null) {
+                                feed.putExtra("nome",  user.getNome());
+                                feed.putExtra("email",  user.getEmail());
+                                feed.putExtra("foto",  user.getFoto());
+                                feed.putExtra("id",  user.getId());
+                                feed.putExtra("senha", user.getSenha());
+
+                                startActivity(feed);
+                                finish();
+                            } else {
+                                Toast.makeText(MainActivity.this,
+                                        "Houve um erro, tente novamente!",
+                                        Toast.LENGTH_LONG).show();
+
+                                progressBar.setVisibility(View.GONE);
+                                btnEntrar.setEnabled(true);
+                                txtLogin.setEnabled(true);
+                                txtSenha.setEnabled(true);
+                                linkCad.setEnabled(true);
+                            }
+                        } else {
+                            Toast.makeText(MainActivity.this,
+                                    "Response: " + response.code(),
+                                    Toast.LENGTH_LONG).show();
+
+                            progressBar.setVisibility(View.GONE);
+                            btnEntrar.setEnabled(true);
+                            txtLogin.setEnabled(true);
+                            txtSenha.setEnabled(true);
+                            linkCad.setEnabled(true);
                         }
                     }
 

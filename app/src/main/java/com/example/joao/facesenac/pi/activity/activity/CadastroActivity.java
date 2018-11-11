@@ -3,9 +3,7 @@ package com.example.joao.facesenac.pi.activity.activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.preference.PreferenceManager;
 import android.provider.MediaStore;
-import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,24 +19,16 @@ import android.widget.Toast;
 
 import com.example.joao.facesenac.R;
 import com.example.joao.facesenac.pi.activity.interfaces.ApiUsers;
-import com.example.joao.facesenac.pi.activity.model.PostUserSignup;
 import com.example.joao.facesenac.pi.activity.model.SignupBody;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
-import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class CadastroActivity extends AppCompatActivity {
     private TextView backLogin;
@@ -63,7 +53,7 @@ public class CadastroActivity extends AppCompatActivity {
         btnCadastro = findViewById(R.id.btnCadastro);
         checkLembreCadastro = findViewById(R.id.checkLembreCadastro);
         progressBarCadastro = findViewById(R.id.progressBarCadastro);
-        profileCadastro = findViewById(R.id.profileCadastro);
+        profileCadastro = findViewById(R.id.profileMenu);
 
         final Intent login = new Intent(this, MainActivity.class);
 
@@ -170,13 +160,29 @@ public class CadastroActivity extends AppCompatActivity {
                             }
                         } if (response.code() == 406) {
                             Toast.makeText(CadastroActivity.this,
-                                    "mane ja existe!",
+                                    "Usuário já existe!",
                                     Toast.LENGTH_LONG).show();
+
+                            progressBarCadastro.setVisibility(View.GONE);
+                            btnCadastro.setEnabled(true);
+                            txtNome.setEnabled(true);
+                            txtEmail.setEnabled(true);
+                            txtSenha.setEnabled(true);
+                            txtSenhaTwo.setEnabled(true);
+                            backLogin.setEnabled(true);
                         }
                         else {
                             Toast.makeText(CadastroActivity.this,
-                                    "fiz caca",
+                                    "Houve um erro, tente novamente",
                                     Toast.LENGTH_LONG).show();
+
+                            progressBarCadastro.setVisibility(View.GONE);
+                            btnCadastro.setEnabled(true);
+                            txtNome.setEnabled(true);
+                            txtEmail.setEnabled(true);
+                            txtSenha.setEnabled(true);
+                            txtSenhaTwo.setEnabled(true);
+                            backLogin.setEnabled(true);
                         }
                     }
 
