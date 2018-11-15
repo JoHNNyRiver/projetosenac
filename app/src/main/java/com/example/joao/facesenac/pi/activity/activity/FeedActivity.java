@@ -1,5 +1,6 @@
 package com.example.joao.facesenac.pi.activity.activity;
 
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
@@ -115,6 +116,9 @@ public class FeedActivity extends AppCompatActivity {
 
                         return true;
                     case R.id.sair:
+                        SQLiteDatabase db = openOrCreateDatabase("app", MODE_PRIVATE, null);
+                        db.execSQL("DROP TABLE user");
+
                         finish();
                         break;
                 }

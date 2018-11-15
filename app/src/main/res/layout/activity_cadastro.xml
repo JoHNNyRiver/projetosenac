@@ -60,7 +60,7 @@
         android:layout_width="0dp"
         android:layout_height="41dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="96dp"
+        android:layout_marginTop="120dp"
         android:layout_marginEnd="8dp"
         android:backgroundTint="@color/senacColor"
         android:ems="10"
@@ -90,30 +90,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtNome" />
 
-    <CheckBox
-        android:id="@+id/checkLembreCadastro"
-        android:layout_width="134dp"
-        android:layout_height="31dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:buttonTint="#47525E"
-
-        android:checked="true"
-        android:text="Relembre-me"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.034"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtSenhaTwo"
-        tools:background="#FAFAFA" />
-
     <Button
         android:id="@+id/btnCadastro"
         style="@style/Widget.AppCompat.Button"
         android:layout_width="0dp"
         android:layout_height="41dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:background="@color/facesenac"
@@ -124,8 +107,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/checkLembreCadastro"
-        app:layout_constraintVertical_bias="0.069" />
+        app:layout_constraintTop_toBottomOf="@+id/txtSenhaTwo"
+        app:layout_constraintVertical_bias="0.198" />
 
     <EditText
         android:id="@+id/txtSenha"

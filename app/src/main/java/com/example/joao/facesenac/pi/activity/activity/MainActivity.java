@@ -1,10 +1,15 @@
 package com.example.joao.facesenac.pi.activity.activity;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteStatement;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -14,10 +19,9 @@ import com.example.joao.facesenac.R;
 import com.example.joao.facesenac.pi.activity.interfaces.ApiUsers;
 import com.example.joao.facesenac.pi.activity.model.PostUserLogin;
 import com.example.joao.facesenac.pi.activity.model.SigninBody;
-import com.google.gson.Gson;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText txtLogin, txtSenha;
     private Button btnEntrar;
     private ProgressBar progressBar;
+    private CheckBox cbLembrar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +47,50 @@ public class MainActivity extends AppCompatActivity {
         txtSenha = findViewById(R.id.txtSenha);
         btnEntrar = findViewById(R.id.btnEntrar);
         progressBar = findViewById(R.id.progressBar);
+        cbLembrar = findViewById(R.id.cbLembrar);
+
+        try {
+            SQLiteDatabase db = openOrCreateDatabase("app", MODE_PRIVATE, null);
+            db.execSQL("CREATE TABLE IF NOT EXISTS user(id INT(30), nome VARCHAR(255), senha VARCHAR(255), email VARCHAR(255), foto LONGTEXT)");
+
+            PostUserLogin user = new PostUserLogin();
+            Intent feed = new Intent(MainActivity.this, FeedActivity.class);
+            Cursor cursor = db.rawQuery("SELECT * FROM user", null);
+
+            int id = cursor.getColumnIndex("id");
+            int nomeidx = cursor.getColumnIndex("nome");
+            int senha = cursor.getColumnIndex("senha");
+            int email = cursor.getColumnIndex("email");
+            int foto = cursor.getColumnIndex("foto");
+
+            while (cursor.moveToFirst()) {
+                user.setId(cursor.getLong(id));
+                user.setNome(cursor.getString(nomeidx));
+                user.setSenha(cursor.getString(senha));
+                user.setEmail(cursor.getString(email));
+                user.setFoto(cursor.getString(foto));
+
+                break;
+            }
+
+            if (cursor.moveToFirst()) {
+                feed.putExtra("nome",  user.getNome());
+                feed.putExtra("email",  user.getEmail());
+                feed.putExtra("foto",  user.getFoto());
+                feed.putExtra("id",  user.getId());
+                feed.putExtra("senha", user.getSenha());
+
+                db.close();
+                cursor.close();
+
+                startActivity(feed);
+                finish();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
 
         final Intent cadastro = new Intent(this, CadastroActivity.class);
         linkCad.setOnClickListener(new View.OnClickListener() {
@@ -104,6 +153,15 @@ public class MainActivity extends AppCompatActivity {
                                 feed.putExtra("foto",  user.getFoto());
                                 feed.putExtra("id",  user.getId());
                                 feed.putExtra("senha", user.getSenha());
+
+                                SQLiteDatabase db = openOrCreateDatabase("app", MODE_PRIVATE, null);
+                                db.execSQL("INSERT INTO user(id, nome, senha, email, foto) " +
+                                        "VALUES('"+ user.getId() +"', " +
+                                        "'"+ user.getNome() +"', " +
+                                        "'"+ user.getSenha() +"', " +
+                                        "'"+ user.getEmail() +"', " +
+                                        "'"+ user.getFoto() +"')");
+
 
                                 startActivity(feed);
                                 finish();
