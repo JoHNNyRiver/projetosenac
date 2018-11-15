@@ -7,9 +7,12 @@
     android:id="@+id/drawer"
     tools:context=".pi.activity.activity.FeedActivity">
 
-    <FrameLayout android:id="@+id/frag_container"
+    <FrameLayout
+        android:id="@+id/frag_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="visible">
+
     </FrameLayout>
 
     <android.support.design.widget.NavigationView android:id="@+id/navigation_view"

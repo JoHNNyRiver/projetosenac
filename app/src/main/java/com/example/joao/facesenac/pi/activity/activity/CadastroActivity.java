@@ -53,7 +53,7 @@ public class CadastroActivity extends AppCompatActivity {
         btnCadastro = findViewById(R.id.btnCadastro);
         checkLembreCadastro = findViewById(R.id.checkLembreCadastro);
         progressBarCadastro = findViewById(R.id.progressBarCadastro);
-        profileCadastro = findViewById(R.id.profileMenu);
+        profileCadastro = findViewById(R.id.imageFeed);
 
         final Intent login = new Intent(this, MainActivity.class);
 

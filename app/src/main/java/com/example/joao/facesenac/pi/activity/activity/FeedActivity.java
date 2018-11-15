@@ -1,7 +1,5 @@
 package com.example.joao.facesenac.pi.activity.activity;
 
-import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
@@ -18,9 +16,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.joao.facesenac.R;
+import com.example.joao.facesenac.pi.activity.frames.AmigosFragment;
 import com.example.joao.facesenac.pi.activity.frames.BlankFragment;
-
-import java.math.BigInteger;
+import com.example.joao.facesenac.pi.activity.frames.BuscarAmigosFragment;
+import com.example.joao.facesenac.pi.activity.frames.PerfilFragment;
+import com.example.joao.facesenac.pi.activity.frames.SobreFragment;
 
 public class FeedActivity extends AppCompatActivity {
     private NavigationView navigationView;
@@ -36,7 +36,7 @@ public class FeedActivity extends AppCompatActivity {
 
         View header = navigationView.getHeaderView(0);
         TextView txtNome = header.findViewById(R.id.txtNome);
-        ImageView profileMenu = header.findViewById(R.id.profileMenu);
+        ImageView profileMenu = header.findViewById(R.id.imageFeed);
 
         BlankFragment fragment = new BlankFragment();
         getSupportFragmentManager()
@@ -73,14 +73,50 @@ public class FeedActivity extends AppCompatActivity {
 
                 drawerLayout.closeDrawers();
 
-                if (menuItem.getItemId() == R.id.home) {
-                    BlankFragment fragment = new BlankFragment();
-                    getSupportFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.frag_container, fragment)
-                            .commit();
+                switch (menuItem.getItemId()) {
+                    case R.id.home:
+                        BlankFragment fragment = new BlankFragment();
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.frag_container, fragment)
+                                .commit();
 
-                    return true;
+                        return true;
+                    case R.id.perfil:
+                        PerfilFragment perfilFragment = new PerfilFragment();
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.frag_container, perfilFragment)
+                                .commit();
+
+                        return true;
+                    case R.id.amigos:
+                        AmigosFragment amigosFragment = new AmigosFragment();
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.frag_container, amigosFragment)
+                                .commit();
+
+                        return true;
+                    case R.id.busca_amigos:
+                        BuscarAmigosFragment buscarAmigosFragment = new BuscarAmigosFragment();
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.frag_container, buscarAmigosFragment)
+                                .commit();
+
+                        return true;
+                    case R.id.sobre:
+                        SobreFragment sobreFragment = new SobreFragment();
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.frag_container, sobreFragment)
+                                .commit();
+
+                        return true;
+                    case R.id.sair:
+                        finish();
+                        break;
                 }
 
                 return false;
@@ -100,11 +136,6 @@ public class FeedActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
-        return true;
     }
 
 }
