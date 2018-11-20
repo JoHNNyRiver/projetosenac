@@ -9,6 +9,7 @@
         <item name="android:statusBarColor">@color/facesenac</item>
         <item name="android:navigationBarColor">@color/facesenac</item>
         <item name="android:textColorPrimary">@android:color/black</item>
+        <item name="cardViewStyle">@style/CardView</item>
     </style>
 
     <style name="AppThemeTwo" parent="Theme.AppCompat.Light">
