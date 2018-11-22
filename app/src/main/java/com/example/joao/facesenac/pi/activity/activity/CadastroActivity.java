@@ -1,7 +1,6 @@
 package com.example.joao.facesenac.pi.activity.activity;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -53,7 +52,7 @@ public class CadastroActivity extends AppCompatActivity {
         txtSenhaTwo = findViewById(R.id.txtSenhaTwo);
         btnCadastro = findViewById(R.id.btnCadastro);
         progressBarCadastro = findViewById(R.id.progressBarCadastro);
-        profileCadastro = findViewById(R.id.imageFeed);
+        profileCadastro = findViewById(R.id.imageFeedDesc);
 
         final Intent login = new Intent(this, MainActivity.class);
 

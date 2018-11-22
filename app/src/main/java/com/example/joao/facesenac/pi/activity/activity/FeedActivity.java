@@ -1,5 +1,7 @@
 package com.example.joao.facesenac.pi.activity.activity;
 
+import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,7 +12,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,6 +23,19 @@ import com.example.joao.facesenac.pi.activity.frames.BlankFragment;
 import com.example.joao.facesenac.pi.activity.frames.BuscarAmigosFragment;
 import com.example.joao.facesenac.pi.activity.frames.PerfilFragment;
 import com.example.joao.facesenac.pi.activity.frames.SobreFragment;
+import com.example.joao.facesenac.pi.activity.interfaces.ApiUsers;
+import com.example.joao.facesenac.pi.activity.model.FeedPerfil;
+import com.example.joao.facesenac.pi.activity.model.PostUserLogin;
+import com.google.gson.internal.LinkedTreeMap;
+
+import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class FeedActivity extends AppCompatActivity {
     private NavigationView navigationView;
@@ -37,7 +51,7 @@ public class FeedActivity extends AppCompatActivity {
 
         View header = navigationView.getHeaderView(0);
         TextView txtNome = header.findViewById(R.id.txtNome);
-        ImageView profileMenu = header.findViewById(R.id.imageFeed);
+        ImageView profileMenu = header.findViewById(R.id.imageFeedDesc);
 
         BlankFragment fragment = new BlankFragment();
         getSupportFragmentManager()
@@ -84,7 +98,42 @@ public class FeedActivity extends AppCompatActivity {
 
                         return true;
                     case R.id.perfil:
+                        SQLiteDatabase dbPerfil = openOrCreateDatabase(
+                                "app", MODE_PRIVATE, null);
+                        PostUserLogin user = new PostUserLogin();
+
+                        try {
+                            Cursor cursor = dbPerfil.rawQuery(
+                                    "SELECT * FROM user", null);
+
+                            int id = cursor.getColumnIndex("id");
+                            int nomeidx = cursor.getColumnIndex("nome");
+                            int senha = cursor.getColumnIndex("senha");
+                            int email = cursor.getColumnIndex("email");
+                            int foto = cursor.getColumnIndex("foto");
+
+                            while (cursor.moveToFirst()) {
+                                user.setId(cursor.getLong(id));
+                                user.setNome(cursor.getString(nomeidx));
+                                user.setSenha(cursor.getString(senha));
+                                user.setEmail(cursor.getString(email));
+                                user.setFoto(cursor.getString(foto));
+
+                                break;
+                            }
+
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+
                         PerfilFragment perfilFragment = new PerfilFragment();
+                        Bundle bundle = new Bundle();
+                        bundle.putString("nome", user.getNome());
+                        bundle.putString("email", user.getEmail());
+                        bundle.putLong("id", user.getId());
+
+                        perfilFragment.setArguments(bundle);
+
                         getSupportFragmentManager()
                                 .beginTransaction()
                                 .replace(R.id.frag_container, perfilFragment)
@@ -116,7 +165,8 @@ public class FeedActivity extends AppCompatActivity {
 
                         return true;
                     case R.id.sair:
-                        SQLiteDatabase db = openOrCreateDatabase("app", MODE_PRIVATE, null);
+                        SQLiteDatabase db = openOrCreateDatabase(
+                                "app", MODE_PRIVATE, null);
                         db.execSQL("DROP TABLE user");
 
                         finish();

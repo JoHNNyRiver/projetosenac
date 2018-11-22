@@ -15,7 +15,7 @@
         android:orientation="horizontal">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/imageFeed"
+            android:id="@+id/imagemFeed"
             android:layout_width="79dp"
             android:layout_height="79dp"
             android:layout_marginStart="8dp"
@@ -30,7 +30,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textView4"
+                android:id="@+id/nomeFeed"
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
                 android:layout_weight="1"
@@ -40,7 +40,7 @@
                 android:textSize="24sp" />
 
             <TextView
-                android:id="@+id/textView11"
+                android:id="@+id/dataFeed"
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
                 android:layout_weight="1"
@@ -55,7 +55,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/textView12"
+            android:id="@+id/descFeed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:lineSpacingExtra="10sp"
@@ -64,7 +64,7 @@
             android:textSize="18sp" />
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/imageFeedDesc"
             android:layout_width="match_parent"
             android:layout_height="300dp"
             app:srcCompat="@drawable/pattern"
@@ -78,7 +78,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/textView13"
+            android:id="@+id/curtidaFeed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
