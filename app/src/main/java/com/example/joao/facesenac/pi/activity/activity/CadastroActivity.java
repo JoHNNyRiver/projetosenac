@@ -141,10 +141,13 @@ public class CadastroActivity extends AppCompatActivity {
                     public void onResponse(Call<Long> call, Response<Long> response) {
                         if (response.code() == 200) {
                             Long res = response.body();
-                            Intent feed = new Intent(CadastroActivity.this, FeedActivity.class);
+                            Intent login = new Intent(CadastroActivity.this, MainActivity.class);
 
                             if (response.isSuccessful() && res != null) {
-                                startActivity(feed);
+                                Toast.makeText(CadastroActivity.this,
+                                        "Usuário criado com sucesso!", Toast.LENGTH_LONG).show();
+
+                                startActivity(login);
                                 finish();
                             } else {
                                 Toast.makeText(CadastroActivity.this, "Houve um erro,  tente novamente!", Toast.LENGTH_LONG).show();
@@ -157,22 +160,11 @@ public class CadastroActivity extends AppCompatActivity {
                                 txtSenhaTwo.setEnabled(true);
                                 backLogin.setEnabled(true);
                             }
-                        } if (response.code() == 406) {
+                        }
+
+                        if (response.code() == 406) {
                             Toast.makeText(CadastroActivity.this,
                                     "Usuário já existe!",
-                                    Toast.LENGTH_LONG).show();
-
-                            progressBarCadastro.setVisibility(View.GONE);
-                            btnCadastro.setEnabled(true);
-                            txtNome.setEnabled(true);
-                            txtEmail.setEnabled(true);
-                            txtSenha.setEnabled(true);
-                            txtSenhaTwo.setEnabled(true);
-                            backLogin.setEnabled(true);
-                        }
-                        else {
-                            Toast.makeText(CadastroActivity.this,
-                                    "Houve um erro, tente novamente",
                                     Toast.LENGTH_LONG).show();
 
                             progressBarCadastro.setVisibility(View.GONE);
