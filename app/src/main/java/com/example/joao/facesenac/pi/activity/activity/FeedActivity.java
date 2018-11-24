@@ -23,24 +23,13 @@ import com.example.joao.facesenac.pi.activity.frames.BlankFragment;
 import com.example.joao.facesenac.pi.activity.frames.BuscarAmigosFragment;
 import com.example.joao.facesenac.pi.activity.frames.PerfilFragment;
 import com.example.joao.facesenac.pi.activity.frames.SobreFragment;
-import com.example.joao.facesenac.pi.activity.interfaces.ApiUsers;
-import com.example.joao.facesenac.pi.activity.model.FeedPerfil;
 import com.example.joao.facesenac.pi.activity.model.PostUserLogin;
-import com.google.gson.internal.LinkedTreeMap;
-
-import java.util.ArrayList;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class FeedActivity extends AppCompatActivity {
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
+    private Long idGeneral;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +53,7 @@ public class FeedActivity extends AppCompatActivity {
         String foto = bdl.getString("foto");
         String email = bdl.getString("email");
         String senha = bdl.getString("senha");
-        Long id = bdl.getLong("id");
+        idGeneral = bdl.getLong("id");
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -91,6 +80,7 @@ public class FeedActivity extends AppCompatActivity {
                 switch (menuItem.getItemId()) {
                     case R.id.home:
                         BlankFragment fragment = new BlankFragment();
+
                         getSupportFragmentManager()
                                 .beginTransaction()
                                 .replace(R.id.frag_container, fragment)
@@ -106,7 +96,7 @@ public class FeedActivity extends AppCompatActivity {
                             Cursor cursor = dbPerfil.rawQuery(
                                     "SELECT * FROM user", null);
 
-                            int id = cursor.getColumnIndex("id");
+                            int id = cursor.getColumnIndex("idGeneral");
                             int nomeidx = cursor.getColumnIndex("nome");
                             int senha = cursor.getColumnIndex("senha");
                             int email = cursor.getColumnIndex("email");
@@ -127,12 +117,12 @@ public class FeedActivity extends AppCompatActivity {
                         }
 
                         PerfilFragment perfilFragment = new PerfilFragment();
-                        Bundle bundle = new Bundle();
-                        bundle.putString("nome", user.getNome());
-                        bundle.putString("email", user.getEmail());
-                        bundle.putLong("id", user.getId());
+                        Bundle bundles = new Bundle();
+                        bundles.putString("nome", user.getNome());
+                        bundles.putString("email", user.getEmail());
+                        bundles.putLong("idGeneral", user.getId());
 
-                        perfilFragment.setArguments(bundle);
+                        perfilFragment.setArguments(bundles);
 
                         getSupportFragmentManager()
                                 .beginTransaction()
@@ -190,6 +180,10 @@ public class FeedActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public Long returnId() {
+        return idGeneral;
     }
 
 }

@@ -1,6 +1,7 @@
 package com.example.joao.facesenac.pi.activity.interfaces;
 
 import com.example.joao.facesenac.pi.activity.model.FeedPerfil;
+import com.example.joao.facesenac.pi.activity.model.PostFeed;
 import com.example.joao.facesenac.pi.activity.model.PostUserLogin;
 import com.example.joao.facesenac.pi.activity.model.PostUserSignup;
 import com.example.joao.facesenac.pi.activity.model.SigninBody;
@@ -31,6 +32,13 @@ public interface ApiUsers {
     })
     @POST("users")
     Call<Long> postSignup(@Body SignupBody info);
+
+    @Headers({
+            "Accept: application/json;charset=utf-8",
+            "Content-Type: application/json;charset=utf-8"
+    })
+    @POST("posts")
+    Call<Long> postFeed(@Body PostFeed postFeeder);
 
     @GET("posts/{id}")
     Call<ArrayList> getPosts(@Path("id") Long id);
