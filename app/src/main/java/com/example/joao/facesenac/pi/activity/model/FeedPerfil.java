@@ -4,6 +4,8 @@ public class FeedPerfil {
     private Long id, usuario;
     private String texto, foto, data;
 
+    private FeedPerfil(){}
+
     public FeedPerfil(Long id, Long usuario, String texto, String foto, String data) {
         this.id = id;
         this.usuario = usuario;
