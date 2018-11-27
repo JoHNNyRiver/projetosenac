@@ -94,15 +94,14 @@ public class FeedActivity extends AppCompatActivity {
 
                         return true;
                     case R.id.perfil:
-                        SQLiteDatabase dbPerfil = openOrCreateDatabase(
-                                "app", MODE_PRIVATE, null);
+                        SQLiteDatabase dbPerfil = openOrCreateDatabase("app", MODE_PRIVATE, null);
                         PostUserLogin user = new PostUserLogin();
 
                         try {
                             Cursor cursor = dbPerfil.rawQuery(
                                     "SELECT * FROM user", null);
 
-                            int id = cursor.getColumnIndex("idGeneral");
+                            int id = cursor.getColumnIndex("id");
                             int nomeidx = cursor.getColumnIndex("nome");
                             int senha = cursor.getColumnIndex("senha");
                             int email = cursor.getColumnIndex("email");
@@ -117,6 +116,12 @@ public class FeedActivity extends AppCompatActivity {
 
                                 break;
                             }
+
+                            PerfilFragment fragmentPerfil = new PerfilFragment();
+                            Bundle bundle = new Bundle();
+                            bundle.putString("nome", user.getNome());
+                            bundle.putString("email", user.getEmail());
+                            fragmentPerfil.setArguments(bundle);
 
                         } catch (SQLException e) {
                             e.printStackTrace();

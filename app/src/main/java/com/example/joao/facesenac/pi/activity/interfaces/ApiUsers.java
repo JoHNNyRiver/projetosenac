@@ -43,4 +43,7 @@ public interface ApiUsers {
 
     @GET("friends/{id}")
     Call<ArrayList<GetFeed>> getPosts(@Path("id") Long id);
+
+    @GET("posts/{id}")
+    Call<ArrayList<GetFeed>> getMyPosts(@Path("id") Long id);
 }

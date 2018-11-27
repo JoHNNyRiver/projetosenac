@@ -28,9 +28,6 @@ import com.example.joao.facesenac.pi.activity.interfaces.ApiUsers;
 import com.example.joao.facesenac.pi.activity.model.GetFeed;
 import com.example.joao.facesenac.pi.activity.model.PostFeed;
 
-import org.apache.commons.codec.DecoderException;
-import org.apache.commons.codec.binary.Hex;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -69,7 +66,12 @@ public class BlankFragment extends Fragment {
 
         addCardPost();
         addLoading();
+        callAddPost();
 
+        return view;
+    }
+
+    public void callAddPost() {
         final OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .connectTimeout(180, TimeUnit.SECONDS)
                 .writeTimeout(180, TimeUnit.SECONDS)
@@ -89,16 +91,16 @@ public class BlankFragment extends Fragment {
             @Override
             public void onResponse(Call<ArrayList<GetFeed>> call, Response<ArrayList<GetFeed>> response) {
                 ArrayList<GetFeed> myposts = response.body();
-                myposts.size();
 
                 if (response.code() == 200) {
+                    myposts.size();
+
                     if (response.isSuccessful()) {
                         for (int i = 0; i < myposts.size(); i++) {
                             addCard(myposts.get(i).getNomeUser(),
                                     myposts.get(i).getData(),
                                     myposts.get(i).getTexto(),
-                                    myposts.get(i).getNumCurtidas(),
-                                    myposts.get(i).getFotoUser());
+                                    myposts.get(i).getNumCurtidas());
                         }
 
                         progressBarLoading.setVisibility(View.GONE);
@@ -113,11 +115,9 @@ public class BlankFragment extends Fragment {
         };
 
         callPosts.enqueue(callbackPosts);
-
-        return view;
     }
 
-    public void addCard(String nome, String data, String desc, Integer curtidas, String fotoUser) {
+    public void addCard(String nome, String data, String desc, Integer curtidas) {
         CardView cardView = (CardView) LayoutInflater.from(getContext())
                 .inflate(R.layout.card_feed, mensagens, false);
 
@@ -236,7 +236,6 @@ public class BlankFragment extends Fragment {
                 .inflate(R.layout.loading, mensagens, false);
 
         progressBarLoading = cardView.findViewById(R.id.progressBarLoading);
-
         mensagens.addView(cardView);
     }
 
