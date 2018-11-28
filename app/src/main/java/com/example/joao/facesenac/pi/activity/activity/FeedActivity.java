@@ -3,21 +3,14 @@ package com.example.joao.facesenac.pi.activity.activity;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
-import android.util.Base64;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,8 +21,6 @@ import com.example.joao.facesenac.pi.activity.frames.BuscarAmigosFragment;
 import com.example.joao.facesenac.pi.activity.frames.PerfilFragment;
 import com.example.joao.facesenac.pi.activity.frames.SobreFragment;
 import com.example.joao.facesenac.pi.activity.model.PostUserLogin;
-
-import java.util.Date;
 
 public class FeedActivity extends AppCompatActivity {
     private NavigationView navigationView;
@@ -56,7 +47,7 @@ public class FeedActivity extends AppCompatActivity {
 
         Bundle bdl = getIntent().getExtras();
         String nome = bdl.getString("nome");
-        String foto = bdl.getString("foto");
+        Boolean foto = bdl.getBoolean("foto");
         String email = bdl.getString("email");
         String senha = bdl.getString("senha");
         idGeneral = bdl.getLong("id");
@@ -65,9 +56,6 @@ public class FeedActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setTitle(nome);
 
-
-        byte[] decodedString = Base64.decode(foto, Base64.DEFAULT);
-        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
 
         txtNome.setText(nome);
 //        profileMenu.setImageBitmap(decodedByte);
@@ -112,7 +100,7 @@ public class FeedActivity extends AppCompatActivity {
                                 user.setNome(cursor.getString(nomeidx));
                                 user.setSenha(cursor.getString(senha));
                                 user.setEmail(cursor.getString(email));
-                                user.setFoto(cursor.getString(foto));
+                                user.setFoto(cursor.getInt(foto));
 
                                 break;
                             }
@@ -121,6 +109,10 @@ public class FeedActivity extends AppCompatActivity {
                             Bundle bundle = new Bundle();
                             bundle.putString("nome", user.getNome());
                             bundle.putString("email", user.getEmail());
+
+                            Boolean tempFoto = user.getTemfoto() != null;
+
+                            bundle.putBoolean("foto", tempFoto);
                             fragmentPerfil.setArguments(bundle);
 
                         } catch (SQLException e) {

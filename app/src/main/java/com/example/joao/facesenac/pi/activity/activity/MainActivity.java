@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             SQLiteDatabase db = openOrCreateDatabase("app", MODE_PRIVATE, null);
-            db.execSQL("CREATE TABLE IF NOT EXISTS user(id INT(30), nome VARCHAR(255), senha VARCHAR(255), email VARCHAR(255), foto LONGTEXT)");
+            db.execSQL("CREATE TABLE IF NOT EXISTS user(id INT(30), nome VARCHAR(255), senha VARCHAR(255), email VARCHAR(255), foto INTEGER )");
 
             PostUserLogin user = new PostUserLogin();
             Intent feed = new Intent(MainActivity.this, FeedActivity.class);
@@ -68,15 +68,17 @@ public class MainActivity extends AppCompatActivity {
                 user.setNome(cursor.getString(nomeidx));
                 user.setSenha(cursor.getString(senha));
                 user.setEmail(cursor.getString(email));
-                user.setFoto(cursor.getString(foto));
+                user.setTemfoto(cursor.getInt(foto));
 
                 break;
             }
 
             if (cursor.moveToFirst()) {
+                Boolean tempFoto = user.getTemfoto() != null;
+
                 feed.putExtra("nome",  user.getNome());
                 feed.putExtra("email",  user.getEmail());
-                feed.putExtra("foto",  user.getFoto());
+                feed.putExtra("foto",  tempFoto);
                 feed.putExtra("id",  user.getId());
                 feed.putExtra("senha", user.getSenha());
 
@@ -150,7 +152,10 @@ public class MainActivity extends AppCompatActivity {
                             if (response.isSuccessful() && user != null) {
                                 feed.putExtra("nome",  user.getNome());
                                 feed.putExtra("email",  user.getEmail());
-                                feed.putExtra("foto",  user.getFoto());
+
+                                Boolean tempFoto = user.getTemfoto() != null;
+
+                                feed.putExtra("foto",  tempFoto);
                                 feed.putExtra("id",  user.getId());
                                 feed.putExtra("senha", user.getSenha());
 
@@ -160,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
                                         "'"+ user.getNome() +"', " +
                                         "'"+ user.getSenha() +"', " +
                                         "'"+ user.getEmail() +"', " +
-                                        "'"+ user.getFoto() +"')");
+                                        "'"+ user.getTemfoto() +"')");
 
 
                                 startActivity(feed);

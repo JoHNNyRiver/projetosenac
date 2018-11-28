@@ -20,6 +20,8 @@ import com.example.joao.facesenac.pi.activity.adapter.FeedAdapter;
 import com.example.joao.facesenac.pi.activity.interfaces.ApiUsers;
 import com.example.joao.facesenac.pi.activity.model.GetFeed;
 import com.example.joao.facesenac.pi.activity.model.PostFeed;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -39,6 +41,8 @@ public class PerfilFragment extends Fragment {
     private FeedActivity activitie;
     private ViewGroup mensagens;
     private String textnome, textEmail;
+    private Boolean foto;
+
 
     public PerfilFragment() {}
 
@@ -54,6 +58,7 @@ public class PerfilFragment extends Fragment {
         if (bundle != null) {
             textnome = bundle.getString("nome");
             textEmail = bundle.getString("email");
+            foto = bundle.getBoolean("foto");
         }
 
         addInfoCard();
@@ -146,9 +151,18 @@ public class PerfilFragment extends Fragment {
 
         TextView nomePerfil = cardView.findViewById(R.id.nomePerfil);
         TextView emailPerfil = cardView.findViewById(R.id.emailPerfil);
+        ImageView imageProfile = cardView.findViewById(R.id.imagePefil);
 
         nomePerfil.setText(textnome);
         emailPerfil.setText(textEmail);
+
+        String url = "https://pi4facenac.azurewebsites.net/PI4/api/users/image/" + idPosts;
+        ImageLoader imageLoader = ImageLoader.getInstance();
+        imageLoader.init(ImageLoaderConfiguration.createDefault(getContext()));
+
+        if (foto) {
+            imageLoader.displayImage(url, imageProfile);
+        }
 
         mensagens.addView(cardView);
     }

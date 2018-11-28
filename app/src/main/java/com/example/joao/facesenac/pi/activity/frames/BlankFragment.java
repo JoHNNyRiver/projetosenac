@@ -1,6 +1,7 @@
 package com.example.joao.facesenac.pi.activity.frames;
 
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -165,6 +167,8 @@ public class BlankFragment extends Fragment {
                 FeedActivity activity = (FeedActivity) getActivity();
                 Long id = activity.returnId();
 
+                closeKeyboard();
+
                 pprogressBarPost.setVisibility(View.VISIBLE);
                 texto.setVisibility(View.GONE);
 
@@ -237,6 +241,15 @@ public class BlankFragment extends Fragment {
 
         progressBarLoading = cardView.findViewById(R.id.progressBarLoading);
         mensagens.addView(cardView);
+    }
+
+    private void closeKeyboard(){
+        View view = getActivity().getCurrentFocus();
+        if(view != null){
+            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+
     }
 
 }

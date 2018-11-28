@@ -24,7 +24,7 @@
         <item name="android:textColorSecondaryInverse">@color/facesenac</item>
         <item name="android:windowBackground">@color/facesenac</item>
         <item name="android:colorBackground">@color/facesenac</item>
-        <item name="android:navigationBarColor">@android:color/white</item>
+        <item name="android:navigationBarColor">@color/facesenac</item>
     </style>
 
 </resources>
