@@ -4,14 +4,14 @@ public class PostUserLogin {
     private Long id;
     private String nome, email, senha;
     private Integer foto;
-    private Integer temfoto;
+    private Integer temFoto;
 
     public Integer getTemfoto() {
-        return temfoto;
+        return temFoto;
     }
 
     public void setTemfoto(Integer temfoto) {
-        this.temfoto = temfoto;
+        this.temFoto = temfoto;
     }
 
     public Long getId() {

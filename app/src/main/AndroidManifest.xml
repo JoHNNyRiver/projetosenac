@@ -2,14 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.joao.facesenac">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
-        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
         <activity android:name=".pi.activity.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -18,9 +20,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".pi.activity.activity.CadastroActivity" />
-        <activity android:name=".pi.activity.activity.FeedActivity"
-            android:theme="@style/AppThemeTwo"></activity>
+        <activity
+            android:name=".pi.activity.activity.FeedActivity"
+            android:theme="@style/AppThemeTwo" />
+        <activity android:name=".pi.activity.activity.PostImageActivity"
+            android:parentActivityName=".pi.activity.activity.FeedActivity"></activity>
     </application>
 
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
 </manifest>

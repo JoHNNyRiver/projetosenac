@@ -2,6 +2,7 @@ package com.example.joao.facesenac.pi.activity.frames;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -25,10 +26,13 @@ import android.widget.Toast;
 import com.example.joao.facesenac.R;
 import com.example.joao.facesenac.pi.activity.activity.FeedActivity;
 import com.example.joao.facesenac.pi.activity.activity.MainActivity;
+import com.example.joao.facesenac.pi.activity.activity.PostImageActivity;
 import com.example.joao.facesenac.pi.activity.adapter.FeedAdapter;
 import com.example.joao.facesenac.pi.activity.interfaces.ApiUsers;
 import com.example.joao.facesenac.pi.activity.model.GetFeed;
 import com.example.joao.facesenac.pi.activity.model.PostFeed;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -93,16 +97,38 @@ public class BlankFragment extends Fragment {
             @Override
             public void onResponse(Call<ArrayList<GetFeed>> call, Response<ArrayList<GetFeed>> response) {
                 ArrayList<GetFeed> myposts = response.body();
+                String nomeUser = "Sem nome";
+                String dataUser = "Sem data";
+                String dataTexto = "Sem texto";
+                int dataNumCurtidas = 0;
+                Long dataUsuario = Long.valueOf(0);
+                String fotoUser = "";
 
                 if (response.code() == 200) {
                     myposts.size();
 
                     if (response.isSuccessful()) {
                         for (int i = 0; i < myposts.size(); i++) {
-                            addCard(myposts.get(i).getNomeUser(),
-                                    myposts.get(i).getData(),
-                                    myposts.get(i).getTexto(),
-                                    myposts.get(i).getNumCurtidas());
+                            if (myposts.get(i).getNomeUser() != null) {
+                                nomeUser = myposts.get(i).getNomeUser();
+                            }
+                            if (myposts.get(i).getData() != null){
+                                dataUser = myposts.get(i).getData();
+                            }
+                            if (myposts.get(i).getTexto() != null){
+                                dataTexto = myposts.get(i).getTexto();
+                            }
+                            if (myposts.get(i).getNumCurtidas() != null){
+                                dataNumCurtidas = myposts.get(i).getNumCurtidas();
+                            }
+                            if (myposts.get(i).getUsuario() != null){
+                                dataUsuario = myposts.get(i).getUsuario();
+                            }
+                            if (myposts.get(i).getFotoUser() != null){
+                                fotoUser = myposts.get(i).getFotoUser();
+                            }
+                            addCard(nomeUser, dataUser, dataTexto, dataNumCurtidas, dataUsuario,
+                                    fotoUser);
                         }
 
                         progressBarLoading.setVisibility(View.GONE);
@@ -119,7 +145,7 @@ public class BlankFragment extends Fragment {
         callPosts.enqueue(callbackPosts);
     }
 
-    public void addCard(String nome, String data, String desc, Integer curtidas) {
+    public void addCard(String nome, String data, String desc, Integer curtidas, Long usuario, String fotoUser) {
         CardView cardView = (CardView) LayoutInflater.from(getContext())
                 .inflate(R.layout.card_feed, mensagens, false);
 
@@ -133,6 +159,14 @@ public class BlankFragment extends Fragment {
         Button comentar = cardView.findViewById(R.id.comentar);
 
         String curtidaTexto = Integer.toString(curtidas);
+
+        String url = "https://pi4facenac.azurewebsites.net/PI4/api/users/image/" + usuario;
+        ImageLoader imageLoader = ImageLoader.getInstance();
+        imageLoader.init(ImageLoaderConfiguration.createDefault(getContext()));
+
+        if (!fotoUser.equals("0")) {
+            imageLoader.displayImage(url, imagemFeed);
+        }
 
         if (curtidaTexto.equals("0")) {
             curtidaTexto = "seja o primeiro a curtir";
@@ -158,6 +192,7 @@ public class BlankFragment extends Fragment {
                 .inflate(R.layout.card_post, mensagens, false);
 
         ImageButton btnEnviar = cardView.findViewById(R.id.btnEnviar);
+        ImageButton imageButton = cardView.findViewById(R.id.imageButton);
         pprogressBarPost = cardView.findViewById(R.id.progressBarPost);
         texto = cardView.findViewById(R.id.textoPostagem);
 
@@ -229,6 +264,14 @@ public class BlankFragment extends Fragment {
                 };
 
                 callFeed.enqueue(callback);
+            }
+        });
+
+        imageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent imageChoice = new Intent(getContext(), PostImageActivity.class);
+                startActivity(imageChoice);
             }
         });
 

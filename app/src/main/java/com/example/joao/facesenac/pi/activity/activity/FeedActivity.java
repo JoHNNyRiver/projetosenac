@@ -21,6 +21,8 @@ import com.example.joao.facesenac.pi.activity.frames.BuscarAmigosFragment;
 import com.example.joao.facesenac.pi.activity.frames.PerfilFragment;
 import com.example.joao.facesenac.pi.activity.frames.SobreFragment;
 import com.example.joao.facesenac.pi.activity.model.PostUserLogin;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 public class FeedActivity extends AppCompatActivity {
     private NavigationView navigationView;
@@ -58,7 +60,14 @@ public class FeedActivity extends AppCompatActivity {
 
 
         txtNome.setText(nome);
-//        profileMenu.setImageBitmap(decodedByte);
+
+        String url = "https://pi4facenac.azurewebsites.net/PI4/api/users/image/" + idGeneral;
+        ImageLoader imageLoader = ImageLoader.getInstance();
+        imageLoader.init(ImageLoaderConfiguration.createDefault(this));
+
+        if (foto) {
+            imageLoader.displayImage(url, profileMenu);
+        }
 
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -84,6 +93,7 @@ public class FeedActivity extends AppCompatActivity {
                     case R.id.perfil:
                         SQLiteDatabase dbPerfil = openOrCreateDatabase("app", MODE_PRIVATE, null);
                         PostUserLogin user = new PostUserLogin();
+                        PerfilFragment fragmentPerfil = new PerfilFragment();
 
                         try {
                             Cursor cursor = dbPerfil.rawQuery(
@@ -100,12 +110,11 @@ public class FeedActivity extends AppCompatActivity {
                                 user.setNome(cursor.getString(nomeidx));
                                 user.setSenha(cursor.getString(senha));
                                 user.setEmail(cursor.getString(email));
-                                user.setFoto(cursor.getInt(foto));
+                                user.setTemfoto(cursor.getInt(foto));
 
                                 break;
                             }
 
-                            PerfilFragment fragmentPerfil = new PerfilFragment();
                             Bundle bundle = new Bundle();
                             bundle.putString("nome", user.getNome());
                             bundle.putString("email", user.getEmail());
@@ -119,17 +128,9 @@ public class FeedActivity extends AppCompatActivity {
                             e.printStackTrace();
                         }
 
-                        PerfilFragment perfilFragment = new PerfilFragment();
-                        Bundle bundles = new Bundle();
-                        bundles.putString("nome", user.getNome());
-                        bundles.putString("email", user.getEmail());
-                        bundles.putLong("idGeneral", user.getId());
-
-                        perfilFragment.setArguments(bundles);
-
                         getSupportFragmentManager()
                                 .beginTransaction()
-                                .replace(R.id.frag_container, perfilFragment)
+                                .replace(R.id.frag_container, fragmentPerfil)
                                 .commit();
 
                         return true;

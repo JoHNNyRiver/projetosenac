@@ -88,15 +88,38 @@ public class PerfilFragment extends Fragment {
             @Override
             public void onResponse(Call<ArrayList<GetFeed>> call, Response<ArrayList<GetFeed>> response) {
                 ArrayList<GetFeed> myposts = response.body();
+                String nomeUser = "Sem nome";
+                String dataUser = "Sem data";
+                String dataTexto = "Sem texto";
+                int dataNumCurtidas = 0;
+                Long dataUsuario = Long.valueOf(0);
+                String fotoUser = "";
+
                 if (response.code() == 200) {
                     myposts.size();
 
                     if (response.isSuccessful()) {
                         for (int i = 0; i < myposts.size(); i++) {
-                            addCard(myposts.get(i).getNomeUser(),
-                                    myposts.get(i).getData(),
-                                    myposts.get(i).getTexto(),
-                                    myposts.get(i).getNumCurtidas());
+                            if (myposts.get(i).getNomeUser() != null) {
+                                nomeUser = myposts.get(i).getNomeUser();
+                            }
+                            if (myposts.get(i).getData() != null){
+                                dataUser = myposts.get(i).getData();
+                            }
+                            if (myposts.get(i).getTexto() != null){
+                                dataTexto = myposts.get(i).getTexto();
+                            }
+                            if (myposts.get(i).getNumCurtidas() != null){
+                                dataNumCurtidas = myposts.get(i).getNumCurtidas();
+                            }
+                            if (myposts.get(i).getUsuario() != null){
+                                dataUsuario = myposts.get(i).getUsuario();
+                            }
+                            if (myposts.get(i).getFotoUser() != null){
+                                fotoUser = myposts.get(i).getFotoUser();
+                            }
+                            addCard(nomeUser, dataUser, dataTexto, dataNumCurtidas, dataUsuario,
+                                    fotoUser);
                         }
 
                         progressBarLoading.setVisibility(View.GONE);
@@ -113,7 +136,7 @@ public class PerfilFragment extends Fragment {
         callPosts.enqueue(callbackPosts);
     }
 
-    public void addCard(String nome, String data, String desc, Integer curtidas) {
+    public void addCard(String nome, String data, String desc, Integer curtidas, Long usuario, String fotoUser) {
         CardView cardView = (CardView) LayoutInflater.from(getContext())
                 .inflate(R.layout.card_feed, mensagens, false);
 
@@ -134,6 +157,14 @@ public class PerfilFragment extends Fragment {
 
         String[] partialData = data.split("-");
         String modifiedData = partialData[2] + "/" + partialData[1] + "/" + partialData[0];
+
+        String url = "https://pi4facenac.azurewebsites.net/PI4/api/users/image/" + usuario;
+        ImageLoader imageLoader = ImageLoader.getInstance();
+        imageLoader.init(ImageLoaderConfiguration.createDefault(getContext()));
+
+        if (!fotoUser.equals("0")) {
+            imageLoader.displayImage(url, imagemFeed);
+        }
 
         imageFeedDesc.setVisibility(View.GONE);
         nomeFeed.setText(nome);
