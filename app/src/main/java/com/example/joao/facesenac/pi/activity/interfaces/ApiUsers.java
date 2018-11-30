@@ -2,6 +2,7 @@ package com.example.joao.facesenac.pi.activity.interfaces;
 
 import com.example.joao.facesenac.pi.activity.model.FeedPerfil;
 import com.example.joao.facesenac.pi.activity.model.GetFeed;
+import com.example.joao.facesenac.pi.activity.model.GetFriends;
 import com.example.joao.facesenac.pi.activity.model.PostFeed;
 import com.example.joao.facesenac.pi.activity.model.PostUserLogin;
 import com.example.joao.facesenac.pi.activity.model.PostUserSignup;
@@ -43,6 +44,9 @@ public interface ApiUsers {
 
     @GET("friends/{id}")
     Call<ArrayList<GetFeed>> getPosts(@Path("id") Long id);
+
+    @GET("friends/{id}")
+    Call<ArrayList<GetFriends>> getFriendsAPI(@Path("id") Long id);
 
     @GET("posts/{id}")
     Call<ArrayList<GetFeed>> getMyPosts(@Path("id") Long id);

@@ -1,5 +1,6 @@
 package com.example.joao.facesenac.pi.activity.activity;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -29,6 +30,10 @@ public class FeedActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private Long idGeneral;
+    private Boolean foto;
+    private String nome;
+    private String emailTwo;
+    private String senha;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +53,38 @@ public class FeedActivity extends AppCompatActivity {
                 .commit();
 
         Bundle bdl = getIntent().getExtras();
-        String nome = bdl.getString("nome");
-        Boolean foto = bdl.getBoolean("foto");
-        String email = bdl.getString("email");
-        String senha = bdl.getString("senha");
-        idGeneral = bdl.getLong("id");
+
+        SQLiteDatabase sqlite = openOrCreateDatabase("app", MODE_PRIVATE, null);
+        PostUserLogin user = new PostUserLogin();
+        Cursor cursor = sqlite.rawQuery("SELECT * FROM user", null);
+
+        int id = cursor.getColumnIndex("id");
+        int nomeidx = cursor.getColumnIndex("nome");
+        int senhas = cursor.getColumnIndex("senha");
+        int email = cursor.getColumnIndex("email");
+        int fotoTwo = cursor.getColumnIndex("foto");
+
+        while (cursor.moveToFirst()) {
+            user.setId(cursor.getLong(id));
+            user.setNome(cursor.getString(nomeidx));
+            user.setSenha(cursor.getString(senhas));
+            user.setEmail(cursor.getString(email));
+            user.setTemfoto(cursor.getInt(fotoTwo));
+
+            break;
+        }
+
+        if (cursor.moveToFirst()) {
+
+            idGeneral = user.getId();
+            foto = user.getTemfoto() != null;
+            nome = user.getNome();
+            emailTwo = user.getEmail();
+            senha = user.getSenha();
+
+            sqlite.close();
+            cursor.close();
+        }
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);

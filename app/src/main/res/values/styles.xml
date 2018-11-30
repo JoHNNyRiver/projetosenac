@@ -20,9 +20,9 @@
         <item name="android:statusBarColor">@color/facesenac</item>
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:textColorPrimaryInverse">@color/facesenac</item>
-        <item name="android:textColorSecondary">@android:color/white</item>
+        <item name="android:textColorSecondary">@color/facesenac</item>
         <item name="android:textColorSecondaryInverse">@color/facesenac</item>
-        <item name="android:windowBackground">@color/facesenac</item>
+        <item name="android:windowBackground">@android:color/white</item>
         <item name="android:colorBackground">@color/facesenac</item>
         <item name="android:navigationBarColor">@color/facesenac</item>
     </style>

@@ -24,6 +24,7 @@
             android:name=".pi.activity.activity.FeedActivity"
             android:theme="@style/AppThemeTwo" />
         <activity android:name=".pi.activity.activity.PostImageActivity"
+            android:theme="@style/AppThemeTwo"
             android:parentActivityName=".pi.activity.activity.FeedActivity"></activity>
     </application>
 

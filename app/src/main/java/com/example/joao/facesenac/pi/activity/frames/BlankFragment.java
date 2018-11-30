@@ -146,7 +146,7 @@ public class BlankFragment extends Fragment {
     }
 
     public void addCard(String nome, String data, String desc, Integer curtidas, Long usuario, String fotoUser) {
-        CardView cardView = (CardView) LayoutInflater.from(getContext())
+        CardView cardView = (CardView) LayoutInflater.from(getActivity())
                 .inflate(R.layout.card_feed, mensagens, false);
 
         TextView nomeFeed = cardView.findViewById(R.id.nomeFeed);
