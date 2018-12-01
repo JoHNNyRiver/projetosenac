@@ -25,6 +25,7 @@ import com.example.joao.facesenac.pi.activity.interfaces.ApiUsers;
 import com.example.joao.facesenac.pi.activity.model.Curtidas;
 import com.example.joao.facesenac.pi.activity.model.GetFeed;
 import com.example.joao.facesenac.pi.activity.model.PostFeed;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
@@ -139,7 +140,7 @@ public class BlankFragment extends Fragment {
                                 liked = myposts.get(i).getLiked();
                             }
                             addCard(nomeUser, dataUser, dataTexto, dataNumCurtidas, dataUsuario,
-                                    fotoUser, id, liked);
+                                    fotoUser, id, liked, myposts.get(i).getTemFoto());
                         }
 
                         progressBarLoading.setVisibility(View.GONE);
@@ -156,7 +157,7 @@ public class BlankFragment extends Fragment {
         callPosts.enqueue(callbackPosts);
     }
 
-    public void addCard(String nome, String data, String desc, Integer curtidas, Long usuario, String fotoUser, Long id, Boolean liked) {
+    public void addCard(String nome, String data, String desc, Integer curtidas, Long usuario, String fotoUser, Long id, Boolean liked, Integer temFoto) {
         CardView cardView = (CardView) LayoutInflater.from(getActivity())
                 .inflate(R.layout.card_feed, mensagens, false);
 
@@ -196,6 +197,9 @@ public class BlankFragment extends Fragment {
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
 
+                curtir.setText("Curtindo ...");
+                curtir.setEnabled(false);
+
                 Long idusr = Long.valueOf(idUser.getText().toString());
                 Long idHist = Long.valueOf(idHistorico.getText().toString());
 
@@ -206,6 +210,8 @@ public class BlankFragment extends Fragment {
                     @Override
                     public void onResponse(Call<Curtidas> call, Response<Curtidas> response) {
                         Curtidas body = response.body();
+                        curtir.setEnabled(true);
+                        curtir.setText("Curtir");
 
                         if (response.isSuccessful() && body != null) {
                             Long totalCurtida = body.getTotalCurtidas();
@@ -227,6 +233,7 @@ public class BlankFragment extends Fragment {
                     @Override
                     public void onFailure(Call<Curtidas> call, Throwable t) {
                         t.printStackTrace();
+                        curtir.setEnabled(true);
                     }
                 };
 
@@ -240,8 +247,31 @@ public class BlankFragment extends Fragment {
         ImageLoader imageLoader = ImageLoader.getInstance();
         imageLoader.init(ImageLoaderConfiguration.createDefault(getActivity()));
 
-        if (!fotoUser.equals("0")) {
-            imageLoader.displayImage(url, imagemFeed);
+        DisplayImageOptions optionsOne = new DisplayImageOptions.Builder()
+                .showImageOnLoading(R.drawable.loading_icon)
+                .showImageForEmptyUri(R.drawable.nouser)
+                .showImageOnFail(R.drawable.nouser)
+                .cacheInMemory(true)
+                .cacheOnDisk(true).build();
+
+        imageLoader.displayImage(url, imagemFeed, optionsOne);
+
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                .showImageOnLoading(R.drawable.loading_icon)
+                .showImageForEmptyUri(R.drawable.noimage)
+                .showImageOnFail(R.drawable.noimage)
+                .cacheInMemory(true)
+                .cacheOnDisk(true).build();
+
+        String urlPost = "https://pi4facenac.azurewebsites.net/PI4/api/posts/image/" + id;
+        ImageLoader imageLoaderPost = ImageLoader.getInstance();
+        imageLoaderPost.init(ImageLoaderConfiguration.createDefault(getActivity()));
+
+        if (temFoto == 1) {
+            imageLoaderPost.displayImage(urlPost, imageFeedDesc, options);
+            imageFeedDesc.setVisibility(View.VISIBLE);
+        } else {
+            imageFeedDesc.setVisibility(View.GONE);
         }
 
         if (curtidaTexto.equals("0")) {
@@ -253,7 +283,6 @@ public class BlankFragment extends Fragment {
         String[] partialData = data.split("-");
         String modifiedData = partialData[2] + "/" + partialData[1] + "/" + partialData[0];
 
-        imageFeedDesc.setVisibility(View.GONE);
         nomeFeed.setText(nome);
         descFeed.setText(desc);
         curtidaFeed.setText(curtidaTexto);
@@ -308,7 +337,7 @@ public class BlankFragment extends Fragment {
                         if (response.code() == 200) {
                             if (response.isSuccessful() && resposta != null) {
                                 Toast.makeText(getActivity(),
-                                        "successfull",
+                                        "Postado com sucesso",
                                         Toast.LENGTH_LONG).show();
 
                                 texto.setText("");
@@ -318,12 +347,14 @@ public class BlankFragment extends Fragment {
                                 Toast.makeText(getActivity(),
                                         "Houve um erro, 1!",
                                         Toast.LENGTH_LONG).show();
+                                pprogressBarPost.setVisibility(View.GONE);
                                 texto.setVisibility(View.VISIBLE);
                             }
                         } else {
                             Toast.makeText(getActivity(),
                                     "Houve um erro, 2!",
                                     Toast.LENGTH_LONG).show();
+                            pprogressBarPost.setVisibility(View.GONE);
                             texto.setVisibility(View.VISIBLE);
                         }
                     }
@@ -333,7 +364,7 @@ public class BlankFragment extends Fragment {
                         t.printStackTrace();
 
                         Toast.makeText(getActivity(),
-                                "Houve um erro,  3!",
+                                "Houve um erro,  tente novamente!",
                                 Toast.LENGTH_LONG).show();
                         texto.setVisibility(View.VISIBLE);
                     }

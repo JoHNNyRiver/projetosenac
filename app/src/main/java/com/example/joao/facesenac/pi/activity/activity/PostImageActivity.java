@@ -122,7 +122,7 @@ public class PostImageActivity extends AppCompatActivity {
                         if (response.code() == 200) {
                             if (response.isSuccessful() && resposta != null) {
                                 Toast.makeText(PostImageActivity.this,
-                                        "successfull",
+                                        "Postado com sucesso",
                                         Toast.LENGTH_LONG).show();
 
                                 finish();
@@ -197,10 +197,10 @@ public class PostImageActivity extends AppCompatActivity {
 
             int larguraT = imageBitmapTwo.getWidth();
             int alturaT = imageBitmapTwo.getHeight();
-            int n = (300 * larguraT) / alturaT;
+            int n = (552 * larguraT) / alturaT;
 
             scaledImage = Bitmap.createScaledBitmap(imageBitmap, x, 150, true);
-            scaleImage300 = Bitmap.createScaledBitmap(imageBitmapTwo, n, 300, true);
+            scaleImage300 = Bitmap.createScaledBitmap(imageBitmapTwo, n, 552, true);
             imageCamera.setImageBitmap(scaledImage);
         }
 
@@ -223,10 +223,10 @@ public class PostImageActivity extends AppCompatActivity {
 
                 int larguraT = imagemTwo.getWidth();
                 int alturaT = imagemTwo.getHeight();
-                int n = (300 * larguraT) / alturaT;
+                int n = (552 * larguraT) / alturaT;
 
                 scaledImage = Bitmap.createScaledBitmap(imagem, x, 150, true);
-                scaleImage300 = Bitmap.createScaledBitmap(imagemTwo, n, 300, true);
+                scaleImage300 = Bitmap.createScaledBitmap(imagemTwo, n, 552, true);
             } catch (IOException e) {
                 e.printStackTrace();
             }

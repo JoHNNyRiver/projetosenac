@@ -1,15 +1,18 @@
 package com.example.joao.facesenac.pi.activity.frames;
 
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -17,11 +20,10 @@ import android.widget.Toast;
 
 import com.example.joao.facesenac.R;
 import com.example.joao.facesenac.pi.activity.activity.FeedActivity;
-import com.example.joao.facesenac.pi.activity.adapter.FeedAdapter;
 import com.example.joao.facesenac.pi.activity.interfaces.ApiUsers;
 import com.example.joao.facesenac.pi.activity.model.Curtidas;
 import com.example.joao.facesenac.pi.activity.model.GetFeed;
-import com.example.joao.facesenac.pi.activity.model.PostFeed;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
@@ -140,7 +142,7 @@ public class PerfilFragment extends Fragment {
                                 liked = myposts.get(i).getLiked();
                             }
                             addCard(nomeUser, dataUser, dataTexto, dataNumCurtidas, dataUsuario,
-                                    fotoUser, id, liked);
+                                    fotoUser, id, liked, myposts.get(i).getTemFoto());
                         }
 
                         progressBarLoading.setVisibility(View.GONE);
@@ -157,7 +159,7 @@ public class PerfilFragment extends Fragment {
         callPosts.enqueue(callbackPosts);
     }
 
-    public void addCard(String nome, String data, String desc, Integer curtidas, Long usuario, String fotoUser, Long id, Boolean liked) {
+    public void addCard(String nome, String data, String desc, Integer curtidas, Long usuario, String fotoUser, Long id, Boolean liked, Integer temFoto) {
         CardView cardView = (CardView) LayoutInflater.from(getActivity())
                 .inflate(R.layout.card_feed, mensagens, false);
 
@@ -241,8 +243,16 @@ public class PerfilFragment extends Fragment {
         ImageLoader imageLoader = ImageLoader.getInstance();
         imageLoader.init(ImageLoaderConfiguration.createDefault(getActivity()));
 
+
+         DisplayImageOptions optionsOne = new DisplayImageOptions.Builder()
+         .showImageOnLoading(R.drawable.loading_icon)
+         .showImageForEmptyUri(R.drawable.noimage)
+         .showImageOnFail(R.drawable.noimage)
+         .cacheInMemory(true)
+         .cacheOnDisk(true).build();
+
         if (!fotoUser.equals("0")) {
-            imageLoader.displayImage(url, imagemFeed);
+            imageLoader.displayImage(url, imagemFeed, optionsOne);
         }
 
         if (curtidaTexto.equals("0")) {
@@ -251,16 +261,42 @@ public class PerfilFragment extends Fragment {
             curtidaTexto = curtidaTexto.equals("1") ? curtidaTexto + " like" : curtidaTexto + " likes";
         }
 
+        String urlPost = "https://pi4facenac.azurewebsites.net/PI4/api/posts/image/" + id;
+        ImageLoader imageLoaderPost = ImageLoader.getInstance();
+        imageLoaderPost.init(ImageLoaderConfiguration.createDefault(getActivity()));
+
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+        .showImageOnLoading(R.drawable.loading_icon)
+        .showImageForEmptyUri(R.drawable.noimage)
+        .showImageOnFail(R.drawable.noimage)
+        .cacheInMemory(true)                                                                                    
+        .cacheOnDisk(true).build();
+
+        WindowManager wm = (WindowManager) getActivity().getSystemService(getActivity().WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        DisplayMetrics metrics = new DisplayMetrics();
+        display.getMetrics(metrics);
+
+        int largura = metrics.widthPixels;
+
+        if (temFoto == 1) {
+          imageLoaderPost.displayImage(urlPost, imageFeedDesc, options);
+
+          imageFeedDesc.setVisibility(View.VISIBLE);
+          imageFeedDesc.setMaxWidth(largura);
+          imageFeedDesc.setMinimumWidth(largura);
+        } else {
+            imageFeedDesc.setVisibility(View.GONE);
+        }
+
         String[] partialData = data.split("-");
         String modifiedData = partialData[2] + "/" + partialData[1] + "/" + partialData[0];
 
-        imageFeedDesc.setVisibility(View.GONE);
         nomeFeed.setText(nome);
         descFeed.setText(desc);
-        curtidaFeed.setText(curtidaTexto);
         dataFeed.setText(modifiedData);
 
-
+        curtidaFeed.setText(curtidaTexto);
         mensagens.addView(cardView);
     }
 
@@ -294,3 +330,4 @@ public class PerfilFragment extends Fragment {
         mensagens.addView(cardView);
     }
 }
+

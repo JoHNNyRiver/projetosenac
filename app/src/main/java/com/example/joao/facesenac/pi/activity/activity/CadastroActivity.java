@@ -219,9 +219,9 @@ public class CadastroActivity extends AppCompatActivity {
                     profileCadastro.setImageBitmap(imagem);
 
                     ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                    imagem.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                    imagem.compress(Bitmap.CompressFormat.JPEG, 50, stream);
                     byte[] byteArr = stream.toByteArray();
-                    imageProfile = Base64.encodeToString(byteArr, Base64.DEFAULT);
+                    imageProfile = Base64.encodeToString(byteArr, Base64.NO_WRAP);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

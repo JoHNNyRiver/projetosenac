@@ -2,7 +2,7 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="3dp">
+    android:layout_marginBottom="5dp">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -10,7 +10,7 @@
         android:id="@+id/adapterFeed"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="0dp"
         android:background="@android:color/white"
         android:orientation="vertical">
 
@@ -18,6 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:paddingTop="10dp"
             android:paddingBottom="3dp">
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -41,8 +42,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="10dp"
                     android:layout_weight="1"
-                    android:paddingBottom="0dp"
                     android:paddingLeft="10dp"
+                    android:paddingBottom="0dp"
                     android:text="Nome do cabloco"
                     android:textSize="24sp" />
 
@@ -67,7 +68,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:lineSpacingExtra="10sp"
-                android:padding="10dp"
+                android:paddingLeft="5dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="10dp"
                 android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
                 android:textSize="18sp" />
 
@@ -82,7 +85,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/ourbg"
             android:orientation="horizontal">
 
             <TextView
@@ -106,8 +108,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:paddingBottom="10dp"
                 android:paddingLeft="10dp"
+                android:paddingBottom="10dp"
                 android:text="0 curtida(s)"
                 android:textColor="@color/facesenac"
                 android:textSize="16sp" />
@@ -116,7 +118,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp"
+            android:background="@drawable/ourbg"
             android:orientation="horizontal">
 
             <Button
@@ -129,7 +131,8 @@
                 android:text="Curtir"
                 android:textAllCaps="false"
                 android:textColor="@color/facesenac"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/comentar"

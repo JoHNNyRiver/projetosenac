@@ -12,6 +12,15 @@ public class GetFeed {
     private String nomeUser;
     private String fotoUser;
     private Boolean liked;
+    private Integer temFoto;
+
+    public Integer getTemFoto() {
+        return temFoto;
+    }
+
+    public void setTemFoto(Integer temFoto) {
+        this.temFoto = temFoto;
+    }
 
     public Boolean getLiked() {
         return liked;
