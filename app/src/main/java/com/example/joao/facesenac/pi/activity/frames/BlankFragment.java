@@ -3,14 +3,9 @@ package com.example.joao.facesenac.pi.activity.frames;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,17 +20,15 @@ import android.widget.Toast;
 
 import com.example.joao.facesenac.R;
 import com.example.joao.facesenac.pi.activity.activity.FeedActivity;
-import com.example.joao.facesenac.pi.activity.activity.MainActivity;
 import com.example.joao.facesenac.pi.activity.activity.PostImageActivity;
-import com.example.joao.facesenac.pi.activity.adapter.FeedAdapter;
 import com.example.joao.facesenac.pi.activity.interfaces.ApiUsers;
+import com.example.joao.facesenac.pi.activity.model.Curtidas;
 import com.example.joao.facesenac.pi.activity.model.GetFeed;
 import com.example.joao.facesenac.pi.activity.model.PostFeed;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -44,7 +37,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -56,6 +48,14 @@ public class BlankFragment extends Fragment {
     private Long idPosts;
     private FeedActivity activitie;
     private ViewGroup mensagens;
+    private TextView idUser;
+    private TextView idHistorico;
+    private TextView nomeFeed;
+    private TextView dataFeed;
+    private TextView descFeed;
+    private ImageView imageFeedDesc;
+    private ImageView imagemFeed;
+    private Button comentar;
 
     public BlankFragment() {}
 
@@ -103,6 +103,9 @@ public class BlankFragment extends Fragment {
                 int dataNumCurtidas = 0;
                 Long dataUsuario = Long.valueOf(0);
                 String fotoUser = "";
+                Long id = Long.valueOf(0);
+                Boolean liked = false;
+
 
                 if (response.code() == 200) {
                     myposts.size();
@@ -127,8 +130,16 @@ public class BlankFragment extends Fragment {
                             if (myposts.get(i).getFotoUser() != null){
                                 fotoUser = myposts.get(i).getFotoUser();
                             }
+
+                            if (myposts.get(i).getId() != null){
+                                id = myposts.get(i).getId();
+                            }
+
+                            if (myposts.get(i).getLiked() != null){
+                                liked = myposts.get(i).getLiked();
+                            }
                             addCard(nomeUser, dataUser, dataTexto, dataNumCurtidas, dataUsuario,
-                                    fotoUser);
+                                    fotoUser, id, liked);
                         }
 
                         progressBarLoading.setVisibility(View.GONE);
@@ -145,24 +156,89 @@ public class BlankFragment extends Fragment {
         callPosts.enqueue(callbackPosts);
     }
 
-    public void addCard(String nome, String data, String desc, Integer curtidas, Long usuario, String fotoUser) {
+    public void addCard(String nome, String data, String desc, Integer curtidas, Long usuario, String fotoUser, Long id, Boolean liked) {
         CardView cardView = (CardView) LayoutInflater.from(getActivity())
                 .inflate(R.layout.card_feed, mensagens, false);
 
-        TextView nomeFeed = cardView.findViewById(R.id.nomeFeed);
-        TextView dataFeed = cardView.findViewById(R.id.dataFeed);
-        TextView descFeed = cardView.findViewById(R.id.descFeed);
-        TextView curtidaFeed = cardView.findViewById(R.id.curtidaFeed);
-        ImageView imageFeedDesc = cardView.findViewById(R.id.imageFeedDesc);
-        ImageView imagemFeed = cardView.findViewById(R.id.imagemFeed);
-        Button curtir = cardView.findViewById(R.id.curtir);
-        Button comentar = cardView.findViewById(R.id.comentar);
+        nomeFeed = cardView.findViewById(R.id.nomeFeed);
+        dataFeed = cardView.findViewById(R.id.dataFeed);
+        descFeed = cardView.findViewById(R.id.descFeed);
+        imageFeedDesc = cardView.findViewById(R.id.imageFeedDesc);
+        imagemFeed = cardView.findViewById(R.id.imagemFeed);
+        comentar = cardView.findViewById(R.id.comentar);
+        idUser = cardView.findViewById(R.id.idUser);
+        idHistorico = cardView.findViewById(R.id.idHistorico);
+
+        final TextView curtidaFeed = cardView.findViewById(R.id.curtidaFeed);
+        final Button curtir = cardView.findViewById(R.id.curtir);
+
+        idUser.setText(String.valueOf(usuario));
+        idHistorico.setText(String.valueOf(id));
+
+        comentar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent comment = new Intent(getActivity(), FeedActivity.CommentActivity.class);
+                startActivity(comment);
+            }
+        });
+
+        if (liked) {
+            curtir.setTextColor(getResources().getColor(R.color.bgbutton));
+        }
+
+
+        curtir.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Retrofit retrofit2 = new Retrofit.Builder()
+                        .baseUrl("https://pi4facenac.azurewebsites.net/PI4/api/curtida/")
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+
+                Long idusr = Long.valueOf(idUser.getText().toString());
+                Long idHist = Long.valueOf(idHistorico.getText().toString());
+
+                ApiUsers apiUsers = retrofit2.create(ApiUsers.class);
+                Call<Curtidas> comments = apiUsers.postComment(idusr, idHist);
+
+                Callback<Curtidas> callback = new Callback<Curtidas>() {
+                    @Override
+                    public void onResponse(Call<Curtidas> call, Response<Curtidas> response) {
+                        Curtidas body = response.body();
+
+                        if (response.isSuccessful() && body != null) {
+                            Long totalCurtida = body.getTotalCurtidas();
+                            String numCurtidas = totalCurtida < 2 ? totalCurtida.toString()  + " like" : totalCurtida + "likes";
+                            numCurtidas = totalCurtida == 0 ? "seja o primeiro a curtir" : numCurtidas;
+
+                            curtidaFeed.setText(numCurtidas);
+
+                            if (body.getStatus()) {
+                                curtir.setTextColor(getResources().getColor(R.color.bgbutton));
+                                Toast.makeText(getActivity(), "Curtido", Toast.LENGTH_LONG).show();
+                            } else {
+                                Toast.makeText(getActivity(), "Descurtido", Toast.LENGTH_LONG).show();
+                                curtir.setTextColor(getResources().getColor(R.color.facesenac));
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Curtidas> call, Throwable t) {
+                        t.printStackTrace();
+                    }
+                };
+
+                comments.enqueue(callback);
+            }
+        });
 
         String curtidaTexto = Integer.toString(curtidas);
 
         String url = "https://pi4facenac.azurewebsites.net/PI4/api/users/image/" + usuario;
         ImageLoader imageLoader = ImageLoader.getInstance();
-        imageLoader.init(ImageLoaderConfiguration.createDefault(getContext()));
+        imageLoader.init(ImageLoaderConfiguration.createDefault(getActivity()));
 
         if (!fotoUser.equals("0")) {
             imageLoader.displayImage(url, imagemFeed);
@@ -171,7 +247,7 @@ public class BlankFragment extends Fragment {
         if (curtidaTexto.equals("0")) {
             curtidaTexto = "seja o primeiro a curtir";
         } else {
-            curtidaTexto = curtidaTexto + "like(s)";
+            curtidaTexto = curtidaTexto.equals("1") ? curtidaTexto + " like" : curtidaTexto + " likes";
         }
 
         String[] partialData = data.split("-");
@@ -188,7 +264,7 @@ public class BlankFragment extends Fragment {
     }
 
     public  void addCardPost() {
-        CardView cardView = (CardView) LayoutInflater.from(getContext())
+        CardView cardView = (CardView) LayoutInflater.from(getActivity())
                 .inflate(R.layout.card_post, mensagens, false);
 
         ImageButton btnEnviar = cardView.findViewById(R.id.btnEnviar);
@@ -231,7 +307,7 @@ public class BlankFragment extends Fragment {
 
                         if (response.code() == 200) {
                             if (response.isSuccessful() && resposta != null) {
-                                Toast.makeText(getContext(),
+                                Toast.makeText(getActivity(),
                                         "successfull",
                                         Toast.LENGTH_LONG).show();
 
@@ -239,13 +315,13 @@ public class BlankFragment extends Fragment {
                                 texto.setVisibility(View.VISIBLE);
                                 pprogressBarPost.setVisibility(View.GONE);
                             } else {
-                                Toast.makeText(getContext(),
+                                Toast.makeText(getActivity(),
                                         "Houve um erro, 1!",
                                         Toast.LENGTH_LONG).show();
                                 texto.setVisibility(View.VISIBLE);
                             }
                         } else {
-                            Toast.makeText(getContext(),
+                            Toast.makeText(getActivity(),
                                     "Houve um erro, 2!",
                                     Toast.LENGTH_LONG).show();
                             texto.setVisibility(View.VISIBLE);
@@ -256,7 +332,7 @@ public class BlankFragment extends Fragment {
                     public void onFailure(Call<Long> call, Throwable t) {
                         t.printStackTrace();
 
-                        Toast.makeText(getContext(),
+                        Toast.makeText(getActivity(),
                                 "Houve um erro,  3!",
                                 Toast.LENGTH_LONG).show();
                         texto.setVisibility(View.VISIBLE);
@@ -270,7 +346,7 @@ public class BlankFragment extends Fragment {
         imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent imageChoice = new Intent(getContext(), PostImageActivity.class);
+                Intent imageChoice = new Intent(getActivity(), PostImageActivity.class);
                 startActivity(imageChoice);
             }
         });
@@ -279,7 +355,7 @@ public class BlankFragment extends Fragment {
     }
 
     public void addLoading() {
-        CardView cardView = (CardView) LayoutInflater.from(getContext())
+        CardView cardView = (CardView) LayoutInflater.from(getActivity())
                 .inflate(R.layout.loading, mensagens, false);
 
         progressBarLoading = cardView.findViewById(R.id.progressBarLoading);

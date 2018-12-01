@@ -29,7 +29,6 @@ public class AmigosFragment extends Fragment {
 
     public AmigosFragment() {}
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

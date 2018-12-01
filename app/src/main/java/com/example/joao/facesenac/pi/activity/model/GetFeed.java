@@ -11,6 +11,15 @@ public class GetFeed {
     private Integer numCurtidas;
     private String nomeUser;
     private String fotoUser;
+    private Boolean liked;
+
+    public Boolean getLiked() {
+        return liked;
+    }
+
+    public void setLiked(Boolean liked) {
+        this.liked = liked;
+    }
 
     private GetFeed() {}
 

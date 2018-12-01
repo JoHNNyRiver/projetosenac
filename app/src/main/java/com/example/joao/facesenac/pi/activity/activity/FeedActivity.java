@@ -1,6 +1,5 @@
 package com.example.joao.facesenac.pi.activity.activity;
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -12,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -222,4 +223,14 @@ public class FeedActivity extends AppCompatActivity {
         return idGeneral;
     }
 
+    public static class CommentActivity extends AppCompatActivity {
+        private EditText editTextComment;
+        private Button buttonComment;
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_comment);
+        }
+    }
 }

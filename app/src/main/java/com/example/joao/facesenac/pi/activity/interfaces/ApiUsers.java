@@ -1,16 +1,14 @@
 package com.example.joao.facesenac.pi.activity.interfaces;
 
-import com.example.joao.facesenac.pi.activity.model.FeedPerfil;
+import com.example.joao.facesenac.pi.activity.model.Curtidas;
 import com.example.joao.facesenac.pi.activity.model.GetFeed;
 import com.example.joao.facesenac.pi.activity.model.GetFriends;
 import com.example.joao.facesenac.pi.activity.model.PostFeed;
 import com.example.joao.facesenac.pi.activity.model.PostUserLogin;
-import com.example.joao.facesenac.pi.activity.model.PostUserSignup;
 import com.example.joao.facesenac.pi.activity.model.SigninBody;
 import com.example.joao.facesenac.pi.activity.model.SignupBody;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -41,6 +39,9 @@ public interface ApiUsers {
     })
     @POST("posts")
     Call<Long> postFeed(@Body PostFeed postFeeder);
+
+    @POST("{usuario}/{historico}")
+    Call<Curtidas> postComment(@Path("usuario") Long user, @Path("historico") Long history);
 
     @GET("friends/{id}")
     Call<ArrayList<GetFeed>> getPosts(@Path("id") Long id);
