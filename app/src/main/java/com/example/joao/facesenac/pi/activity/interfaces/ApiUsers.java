@@ -33,10 +33,7 @@ public interface ApiUsers {
     @POST("users")
     Call<Long> postSignup(@Body SignupBody info);
 
-    @Headers({
-        "Accept: application/json;charset=utf-8",
-        "Content-Type: application/json;charset=utf-8"
-    })
+
     @POST("posts")
     Call<Long> postFeed(@Body PostFeed postFeeder);
 
