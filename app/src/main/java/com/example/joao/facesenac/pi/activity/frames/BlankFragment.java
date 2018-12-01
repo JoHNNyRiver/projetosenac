@@ -218,7 +218,7 @@ public class BlankFragment extends Fragment {
 
                 PostFeed postFeeder = new PostFeed();
                 postFeeder.setTexto(textoValue);
-                postFeeder.setId(id);
+                postFeeder.setUsuario(id);
                 postFeeder.setFoto(fotoValue);
 
 

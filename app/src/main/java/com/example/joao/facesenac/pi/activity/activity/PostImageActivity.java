@@ -103,11 +103,11 @@ public class PostImageActivity extends AppCompatActivity {
 
                 ApiUsers apiFeed = postFeed.create(ApiUsers.class);
                 String textoValue = editTextImage.getText().toString();
-                String fotoValue = Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.DEFAULT);
+                String fotoValue = Base64.encodeToString(byteArrayOutputStream.toByteArray(), Base64.NO_WRAP );
 
                 PostFeed postFeeder = new PostFeed();
                 postFeeder.setTexto(textoValue);
-                postFeeder.setId(idGeneral);
+                postFeeder.setUsuario(idGeneral);
                 postFeeder.setFoto(fotoValue);
 
                 Call<Long> callFeed = apiFeed.postFeed(postFeeder);

@@ -5,11 +5,11 @@ public class PostFeed {
     private String texto;
     private String foto;
 
-    public Long getId() {
+    public Long getUsuario() {
         return usuario;
     }
 
-    public void setId(Long usuario) {
+    public void setUsuario(Long usuario) {
         this.usuario = usuario;
     }
 
