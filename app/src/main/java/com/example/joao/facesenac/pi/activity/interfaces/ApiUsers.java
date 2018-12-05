@@ -47,4 +47,7 @@ public interface ApiUsers {
 
     @GET("posts/{id}")
     Call<ArrayList<GetFeed>> getMyPosts(@Path("id") Long id);
+
+    @GET("users/search/{id}/{query}")
+    Call<ArrayList<GetFriends>> getUsersAPI(@Path("id") Long id, @Path("query") String query);
 }
