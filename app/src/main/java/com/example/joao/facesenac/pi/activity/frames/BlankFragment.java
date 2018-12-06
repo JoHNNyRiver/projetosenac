@@ -1,6 +1,7 @@
 package com.example.joao.facesenac.pi.activity.frames;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -57,6 +58,7 @@ public class BlankFragment extends Fragment {
     private ImageView imageFeedDesc;
     private ImageView imagemFeed;
     private Button comentar;
+    private Activity ctx;
 
     public BlankFragment() {}
 
@@ -70,6 +72,7 @@ public class BlankFragment extends Fragment {
         activitie = (FeedActivity) getActivity();
         idPosts = activitie.returnId();
         mensagens = view.findViewById(R.id.container);
+        ctx = getActivity();
 
         addCardPost();
         addLoading();
@@ -261,7 +264,7 @@ public class BlankFragment extends Fragment {
                 .showImageForEmptyUri(R.drawable.noimage)
                 .showImageOnFail(R.drawable.noimage)
                 .cacheInMemory(true)
-                .cacheOnDisk(true).build();
+                .build();
 
         String urlPost = "https://pi4facenac.azurewebsites.net/PI4/api/posts/image/" + id;
         ImageLoader imageLoaderPost = ImageLoader.getInstance();

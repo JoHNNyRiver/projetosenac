@@ -5,8 +5,15 @@
     android:layout_height="match_parent"
     tools:context=".pi.activity.frames.AmigosFragment">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycleAmigos"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/containerAmigos"/>
+    </ScrollView>
+
 </FrameLayout>

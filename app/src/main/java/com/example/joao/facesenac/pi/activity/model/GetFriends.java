@@ -7,8 +7,17 @@ public class GetFriends {
     private String nome;
     private String foto;
     private Boolean aprovado;
+    private String statusAmizade;
 
     private GetFriends() {}
+
+    public String getStatusAmizade() {
+        return statusAmizade;
+    }
+
+    public void setStatusAmizade(String statusAmizade) {
+        this.statusAmizade = statusAmizade;
+    }
 
     public Long getUsuario1() {
         return usuario1;

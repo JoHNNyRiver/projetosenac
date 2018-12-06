@@ -175,14 +175,14 @@ public class FeedActivity extends AppCompatActivity {
                                 .commit();
 
                         return true;
-                    case R.id.busca_amigos:
-                        BuscarAmigosFragment buscarAmigosFragment = new BuscarAmigosFragment();
-                        getSupportFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.frag_container, buscarAmigosFragment)
-                                .commit();
-
-                        return true;
+//                    case R.id.busca_amigos:
+//                        BuscarAmigosFragment buscarAmigosFragment = new BuscarAmigosFragment();
+//                        getSupportFragmentManager()
+//                                .beginTransaction()
+//                                .replace(R.id.frag_container, buscarAmigosFragment)
+//                                .commit();
+//
+//                        return true;
                     case R.id.sobre:
                         SobreFragment sobreFragment = new SobreFragment();
                         getSupportFragmentManager()

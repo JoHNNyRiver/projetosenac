@@ -5,16 +5,20 @@ import com.example.joao.facesenac.pi.activity.model.GetFeed;
 import com.example.joao.facesenac.pi.activity.model.GetFriends;
 import com.example.joao.facesenac.pi.activity.model.PostFeed;
 import com.example.joao.facesenac.pi.activity.model.PostUserLogin;
+import com.example.joao.facesenac.pi.activity.model.PutAmigos;
 import com.example.joao.facesenac.pi.activity.model.SigninBody;
 import com.example.joao.facesenac.pi.activity.model.SignupBody;
+import com.example.joao.facesenac.pi.activity.model.getDeleteAmigo;
 
 import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface ApiUsers {
@@ -45,6 +49,12 @@ public interface ApiUsers {
 
     @GET("friends/{id}")
     Call<ArrayList<GetFriends>> getFriendsAPI(@Path("id") Long id);
+
+    @DELETE("friends/{idUsuario}/{idAmizade}")
+    Call<getDeleteAmigo> deletAmizade(@Path("idUsuario") Long idUsuario, @Path("idAmizade") Long idAmizade);
+
+    @PUT("friends")
+    Call<getDeleteAmigo> putFriends(PutAmigos putAmigos);
 
     @GET("posts/{id}")
     Call<ArrayList<GetFeed>> getMyPosts(@Path("id") Long id);

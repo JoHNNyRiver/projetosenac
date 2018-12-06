@@ -21,12 +21,12 @@
             android:iconTint="@android:color/white"
             android:title="amigos"/>
 
-        <item
-            android:id="@+id/busca_amigos"
-            android:checked="false"
-            android:icon="@drawable/ic_person_add"
-            android:iconTint="@android:color/white"
-            android:title="Buscar amigos"/>
+        <!--<item-->
+            <!--android:id="@+id/busca_amigos"-->
+            <!--android:checked="false"-->
+            <!--android:icon="@drawable/ic_person_add"-->
+            <!--android:iconTint="@android:color/white"-->
+            <!--android:title="Buscar amigos"/>-->
 
 
         <item
