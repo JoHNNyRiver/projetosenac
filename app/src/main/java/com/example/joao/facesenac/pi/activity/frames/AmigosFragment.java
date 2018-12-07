@@ -95,6 +95,7 @@ public class AmigosFragment extends Fragment {
         ImageView imageAmigosLayout = cardView.findViewById(R.id.imageAmigosLayout);
         TextView nomeAmigo = cardView.findViewById(R.id.nomeAmigo);
         TextView statusAmigo = cardView.findViewById(R.id.statusAmigo);
+        final ImageButton buttonAmigosConviteLayout = cardView.findViewById(R.id.buttonAmigosConviteLayout);
         final ImageButton buttonAmigosAdicionaLayout = cardView.findViewById(R.id.buttonAmigosAdicionaLayout);
         ImageButton buttonAmigosDeletaLayout = cardView.findViewById(R.id.buttonAmigosDeletaLayout);
         EditText amizadeHiddenId = cardView.findViewById(R.id.amizadeHiddenId);
@@ -103,6 +104,42 @@ public class AmigosFragment extends Fragment {
         nomeAmigo.setText(nome);
         statusAmigo.setText(statusAmizade);
         idHidden = id;
+
+        buttonAmigosConviteLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Retrofit usersApi = new Retrofit.Builder()
+                        .baseUrl("https://pi4facenac.azurewebsites.net/PI4/api/")
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+
+                ApiUsers apiUsers = usersApi.create(ApiUsers.class);
+
+                Call<getDeleteAmigo> call = apiUsers.setAmizade(idPosts, idHidden);
+                progressBarAmigos.setVisibility(View.VISIBLE);
+
+                Callback<getDeleteAmigo> callback = new Callback<getDeleteAmigo>() {
+                    @Override
+                    public void onResponse(Call<getDeleteAmigo> call, Response<getDeleteAmigo> response) {
+                        getDeleteAmigo body = response.body();
+                        progressBarAmigos.setVisibility(View.GONE);
+
+                        if (response.isSuccessful() && body != null) {
+                            buttonAmigosAdicionaLayout.setVisibility(View.INVISIBLE);
+                            buttonAmigosConviteLayout.setVisibility(View.INVISIBLE);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<getDeleteAmigo> call, Throwable t) {
+                        t.printStackTrace();
+                        progressBarAmigos.setVisibility(View.GONE);
+                    }
+                };
+
+                call.enqueue(callback);
+            }
+        });
 
         buttonAmigosAdicionaLayout.setOnClickListener(new View.OnClickListener() {
             @Override

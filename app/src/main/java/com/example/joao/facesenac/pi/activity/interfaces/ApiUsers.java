@@ -50,6 +50,9 @@ public interface ApiUsers {
     @GET("friends/{id}")
     Call<ArrayList<GetFriends>> getFriendsAPI(@Path("id") Long id);
 
+    @POST("friends/{idUsuario}/{idAmizade}")
+    Call<getDeleteAmigo> setAmizade(@Path("idUsuario") Long idUsuario, @Path("idAmizade") Long idAmizade);
+
     @DELETE("friends/{idUsuario}/{idAmizade}")
     Call<getDeleteAmigo> deletAmizade(@Path("idUsuario") Long idUsuario, @Path("idAmizade") Long idAmizade);
 

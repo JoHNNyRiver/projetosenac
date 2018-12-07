@@ -65,6 +65,16 @@
                 android:visibility="gone" />
 
             <ImageButton
+                android:id="@+id/buttonAmigosConviteLayout"
+                style="@android:style/Widget.Material.Light.ImageButton"
+                android:layout_width="14dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@color/colorPrimary"
+                android:elevation="0dp"
+                android:src="@android:drawable/ic_input_add" />
+
+            <ImageButton
                 android:id="@+id/buttonAmigosAdicionaLayout"
                 style="@android:style/Widget.Material.Light.ImageButton"
                 android:layout_width="14dp"
