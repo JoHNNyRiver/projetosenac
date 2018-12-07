@@ -16,4 +16,13 @@
             android:id="@+id/containerAmigos"/>
     </ScrollView>
 
+    <TextView
+        android:id="@+id/semAmigos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sem pedido de amizade"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        android:visibility="gone" />
+
 </FrameLayout>

@@ -32,6 +32,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static android.content.Context.NOTIFICATION_SERVICE;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -41,17 +43,21 @@ public class AmigosFragment extends Fragment {
     private FeedActivity activitie;
     private ViewGroup mensagem;
     private Activity ctx;
+    private ProgressBar progressBarLoading;
 
     public AmigosFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_amigos, container, false);
+        final View view = inflater.inflate(R.layout.fragment_amigos, container, false);
         activitie = (FeedActivity) getActivity();
         idPosts = activitie.returnId();
         ctx = getActivity();
         mensagem = view.findViewById(R.id.containerAmigos);
+
+        addLoading();
+
 
         Retrofit usersApi = new Retrofit.Builder()
                 .baseUrl("https://pi4facenac.azurewebsites.net/PI4/api/")
@@ -65,6 +71,7 @@ public class AmigosFragment extends Fragment {
             @Override
             public void onResponse(Call<ArrayList<GetFriends>> call, Response<ArrayList<GetFriends>> response) {
                 ArrayList<GetFriends> body = response.body();
+                progressBarLoading.setVisibility(View.GONE);
 
                 if (response.isSuccessful() && body != null) {
                     for (int i = 0; i < body.size(); i++) {
@@ -73,12 +80,17 @@ public class AmigosFragment extends Fragment {
                                 body.get(i).getId(),
                                 body.get(i).getAprovado());
                     }
+
+                    if (body.size() < 1) {
+                        view.findViewById(R.id.semAmigos).setVisibility(View.VISIBLE);
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<ArrayList<GetFriends>> call, Throwable t) {
-
+                t.printStackTrace();
+                progressBarLoading.setVisibility(View.GONE);
             }
         };
 
@@ -113,9 +125,6 @@ public class AmigosFragment extends Fragment {
                         .build();
 
                 ApiUsers apiUsers = usersApi.create(ApiUsers.class);
-//                PutAmigos putAmigos = new PutAmigos();
-//                putAmigos.setUsuario1(idPosts);
-//                putAmigos.setUsuario2(idHidden);
                 Call<getDeleteAmigo> call = apiUsers.putFriends(idPosts, idHidden);
 
                 progressBarAmigos.setVisibility(View.VISIBLE);
@@ -194,6 +203,14 @@ public class AmigosFragment extends Fragment {
             buttonAmigosAdicionaLayout.setVisibility(View.INVISIBLE);
         }
 
+        mensagem.addView(cardView);
+    }
+
+    public void addLoading() {
+        CardView cardView = (CardView) LayoutInflater.from(getActivity())
+                .inflate(R.layout.loading, mensagem, false);
+
+        progressBarLoading = cardView.findViewById(R.id.progressBarLoading);
         mensagem.addView(cardView);
     }
 
