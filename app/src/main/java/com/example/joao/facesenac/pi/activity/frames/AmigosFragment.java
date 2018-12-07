@@ -112,11 +112,11 @@ public class AmigosFragment extends Fragment {
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
 
-                ApiUsers apiUserss = usersApi.create(ApiUsers.class);
-                PutAmigos putAmigos = new PutAmigos();
-                putAmigos.setUsuario1(idPosts);
-                putAmigos.setUsuario2(idHidden);
-                Call<getDeleteAmigo> call = apiUserss.putFriends(putAmigos);
+                ApiUsers apiUsers = usersApi.create(ApiUsers.class);
+//                PutAmigos putAmigos = new PutAmigos();
+//                putAmigos.setUsuario1(idPosts);
+//                putAmigos.setUsuario2(idHidden);
+                Call<getDeleteAmigo> call = apiUsers.putFriends(idPosts, idHidden);
 
                 progressBarAmigos.setVisibility(View.VISIBLE);
 

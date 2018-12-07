@@ -53,8 +53,8 @@ public interface ApiUsers {
     @DELETE("friends/{idUsuario}/{idAmizade}")
     Call<getDeleteAmigo> deletAmizade(@Path("idUsuario") Long idUsuario, @Path("idAmizade") Long idAmizade);
 
-    @PUT("friends")
-    Call<getDeleteAmigo> putFriends(PutAmigos putAmigos);
+    @PUT("friends/{idUsuario}/{idAmizade}")
+    Call<getDeleteAmigo> putFriends(@Path("idUsuario") Long idUsuario, @Path("idAmizade") Long idAmizade);
 
     @GET("posts/{id}")
     Call<ArrayList<GetFeed>> getMyPosts(@Path("id") Long id);
