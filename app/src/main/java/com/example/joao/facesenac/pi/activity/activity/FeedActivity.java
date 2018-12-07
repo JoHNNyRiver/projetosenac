@@ -61,8 +61,6 @@ public class FeedActivity extends AppCompatActivity {
         TextView txtNome = header.findViewById(R.id.txtNome);
         ImageView profileMenu = header.findViewById(R.id.imageFeedDesc);
 
-        notificarUsuario("João Ribeiro");
-
         BlankFragment fragment = new BlankFragment();
         getSupportFragmentManager()
                 .beginTransaction()
@@ -140,8 +138,7 @@ public class FeedActivity extends AppCompatActivity {
 
                 if (response.isSuccessful() && body.size() > 0) {
                     for (int i = 0; i < body.size(); i++) {
-                        if (!body.get(i).getStatusAmizade().equals("solicitante") ||
-                            !body.get(i).getStatusAmizade().equals("amigos")) {
+                        if (body.get(i).getStatusAmizade().equals("solicitado")) {
                             notificarUsuario(body.get(i).getNome());
                         }
                     }
