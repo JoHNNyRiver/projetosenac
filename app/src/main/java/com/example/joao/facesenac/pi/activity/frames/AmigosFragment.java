@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.joao.facesenac.R;
 import com.example.joao.facesenac.pi.activity.activity.FeedActivity;
@@ -60,7 +61,7 @@ public class AmigosFragment extends Fragment {
 
 
         Retrofit usersApi = new Retrofit.Builder()
-                .baseUrl("https://pi4facenac.azurewebsites.net/PI4/api/")
+                .baseUrl("https://pi4facenac.azurewebsites.net/PI4/api/users/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -73,12 +74,16 @@ public class AmigosFragment extends Fragment {
                 ArrayList<GetFriends> body = response.body();
                 progressBarLoading.setVisibility(View.GONE);
 
+                String status = "";
                 if (response.isSuccessful() && body != null) {
                     for (int i = 0; i < body.size(); i++) {
-                        addCard(body.get(i).getStatusAmizade(),
+                        if (body.get(i).getAmizade() != null) {
+                            status = body.get(i).getAmizade();
+                        }
+
+                        addCard(status,
                                 body.get(i).getNome(),
-                                body.get(i).getId(),
-                                body.get(i).getAprovado());
+                                body.get(i).getId());
                     }
 
                     if (body.size() < 1) {
@@ -100,20 +105,26 @@ public class AmigosFragment extends Fragment {
 
     }
 
-    public void addCard (String statusAmizade, String nome, Long id, Boolean aprovado) {
+    public void addCard (String statusAmizade, String nome, Long id) {
         final CardView cardView = (CardView) LayoutInflater.from(ctx)
                 .inflate(R.layout.card_friends, mensagem, false);
 
         ImageView imageAmigosLayout = cardView.findViewById(R.id.imageAmigosLayout);
         TextView nomeAmigo = cardView.findViewById(R.id.nomeAmigo);
         TextView statusAmigo = cardView.findViewById(R.id.statusAmigo);
-        final ImageButton buttonAmigosAdicionaLayout = cardView.findViewById(R.id.buttonAmigosAdicionaLayout);
+        final ImageView buttonAmigosAdicionaLayout = cardView.findViewById(R.id.buttonAmigosAdicionaLayout);
         ImageButton buttonAmigosDeletaLayout = cardView.findViewById(R.id.buttonAmigosDeletaLayout);
+        final ImageButton btnAceitar = cardView.findViewById(R.id.btnAceitar);
         EditText amizadeHiddenId = cardView.findViewById(R.id.amizadeHiddenId);
         final ProgressBar progressBarAmigos = cardView.findViewById(R.id.progressBarAmigos);
 
         nomeAmigo.setText(nome);
         statusAmigo.setText(statusAmizade);
+
+        if (statusAmizade.equals("solicitante")) {
+            statusAmigo.setText("Aceitar amizade?");
+        }
+
         idHidden = id;
 
         buttonAmigosAdicionaLayout.setOnClickListener(new View.OnClickListener() {
@@ -144,6 +155,7 @@ public class AmigosFragment extends Fragment {
                     public void onFailure(Call<getDeleteAmigo> call, Throwable t) {
                         t.printStackTrace();
                         progressBarAmigos.setVisibility(View.GONE);
+                        Toast.makeText(getActivity(), "Erro", Toast.LENGTH_LONG).show();
                     }
                 };
 
@@ -179,6 +191,43 @@ public class AmigosFragment extends Fragment {
                     public void onFailure(Call<getDeleteAmigo> call, Throwable t) {
                         t.printStackTrace();
                         progressBarAmigos.setVisibility(View.GONE);
+                        Toast.makeText(getActivity(), "Erro", Toast.LENGTH_LONG).show();
+                    }
+                };
+
+                call.enqueue(callback);
+            }
+        });
+
+        btnAceitar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Retrofit usersApi = new Retrofit.Builder()
+                        .baseUrl("https://pi4facenac.azurewebsites.net/PI4/api/")
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+
+                ApiUsers apiUsers = usersApi.create(ApiUsers.class);
+                Call<getDeleteAmigo> call = apiUsers.postFriends(idPosts, idHidden);
+
+                progressBarAmigos.setVisibility(View.VISIBLE);
+
+                Callback<getDeleteAmigo> callback = new Callback<getDeleteAmigo>() {
+                    @Override
+                    public void onResponse(Call<getDeleteAmigo> call, Response<getDeleteAmigo> response) {
+                        getDeleteAmigo body = response.body();
+                        progressBarAmigos.setVisibility(View.GONE);
+
+                        if (response.isSuccessful() && body != null) {
+                            btnAceitar.setVisibility(View.INVISIBLE);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<getDeleteAmigo> call, Throwable t) {
+                        t.printStackTrace();
+                        Toast.makeText(getActivity(), "Erro", Toast.LENGTH_LONG).show();
+                        progressBarAmigos.setVisibility(View.GONE);
                     }
                 };
 
@@ -200,7 +249,12 @@ public class AmigosFragment extends Fragment {
         imageLoaderPost.displayImage(urlPost, imageAmigosLayout, options);
 
         if (statusAmizade.equals("solicitante") || statusAmizade.equals("amigos")) {
-            buttonAmigosAdicionaLayout.setVisibility(View.INVISIBLE);
+            btnAceitar.setVisibility(View.INVISIBLE);
+        }
+
+        if (statusAmizade.equals("")) {
+            buttonAmigosAdicionaLayout.setVisibility(View.GONE);
+            statusAmigo.setText("Adicione " + nome + " como amigo");
         }
 
         mensagem.addView(cardView);

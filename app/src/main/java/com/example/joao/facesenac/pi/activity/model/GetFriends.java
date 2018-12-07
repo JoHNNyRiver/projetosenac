@@ -1,38 +1,47 @@
 package com.example.joao.facesenac.pi.activity.model;
 
 public class GetFriends {
-    private Long usuario1;
-    private Long usuario2;
     private Long id;
     private String nome;
     private String foto;
     private Boolean aprovado;
-    private String statusAmizade;
+    private String amizade;
+    private String email;
+    private String senha;
+    private Integer temfoto;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    public Integer getTemfoto() {
+        return temfoto;
+    }
+
+    public void setTemfoto(Integer temfoto) {
+        this.temfoto = temfoto;
+    }
 
     private GetFriends() {}
 
-    public String getStatusAmizade() {
-        return statusAmizade;
+    public String getAmizade() {
+        return amizade;
     }
 
-    public void setStatusAmizade(String statusAmizade) {
-        this.statusAmizade = statusAmizade;
-    }
-
-    public Long getUsuario1() {
-        return usuario1;
-    }
-
-    public void setUsuario1(Long usuario1) {
-        this.usuario1 = usuario1;
-    }
-
-    public Long getUsuario2() {
-        return usuario2;
-    }
-
-    public void setUsuario2(Long usuario2) {
-        this.usuario2 = usuario2;
+    public void setAmizade(String statusAmizade) {
+        this.amizade = statusAmizade;
     }
 
     public Long getId() {

@@ -124,7 +124,7 @@ public class FeedActivity extends AppCompatActivity {
         }
 
         Retrofit usersApi = new Retrofit.Builder()
-                .baseUrl("https://pi4facenac.azurewebsites.net/PI4/api/")
+                .baseUrl("https://pi4facenac.azurewebsites.net/PI4/api/users/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
@@ -138,8 +138,11 @@ public class FeedActivity extends AppCompatActivity {
 
                 if (response.isSuccessful() && body.size() > 0) {
                     for (int i = 0; i < body.size(); i++) {
-                        if (body.get(i).getStatusAmizade().equals("solicitado")) {
-                            notificarUsuario(body.get(i).getNome());
+
+                        if (body.get(i).getAmizade() != null) {
+                            if (body.get(i).getAmizade().equals("solicitante")) {
+                                notificarUsuario(body.get(i).getNome());
+                            }
                         }
                     }
                 }
