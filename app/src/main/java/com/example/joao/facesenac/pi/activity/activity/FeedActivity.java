@@ -56,8 +56,9 @@ public class FeedActivity extends AppCompatActivity {
     private String emailTwo;
     private String senha;
     private int idNotify;
-
-
+    public static final String NOTIFICATION_CHANNEL_ID = "10001";
+    private NotificationManager mNotificationManager;
+    private NotificationCompat.Builder mBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +98,6 @@ public class FeedActivity extends AppCompatActivity {
         }
 
         if (cursor.moveToFirst()) {
-
             idGeneral = user.getId();
             foto = user.getTemfoto() != null;
             nome = user.getNome();
@@ -179,7 +179,6 @@ public class FeedActivity extends AppCompatActivity {
                 switch (menuItem.getItemId()) {
                     case R.id.home:
                         BlankFragment fragment = new BlankFragment();
-
                         getSupportFragmentManager()
                                 .beginTransaction()
                                 .replace(R.id.frag_container, fragment)
@@ -247,8 +246,7 @@ public class FeedActivity extends AppCompatActivity {
 
                         return true;
                     case R.id.sair:
-                        SQLiteDatabase db = openOrCreateDatabase(
-                                "app", MODE_PRIVATE, null);
+                        SQLiteDatabase db = openOrCreateDatabase("app", MODE_PRIVATE, null);
                         db.execSQL("DROP TABLE user");
 
                         finish();
@@ -289,26 +287,20 @@ public class FeedActivity extends AppCompatActivity {
         }
     }
 
-    public static final String NOTIFICATION_CHANNEL_ID = "10001";
-    private NotificationManager mNotificationManager;
-    private NotificationCompat.Builder mBuilder;
-
     public void createNotification(String nome)
     {
-        /**Creates an explicit intent for an Activity in your app**/
         Intent resultIntent = new Intent(FeedActivity.this , FeedActivity.class);
         resultIntent.putExtra("amigos", true);
         resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        PendingIntent resultPendingIntent = PendingIntent.getActivity(FeedActivity.this,
-                0 /* Request code */, resultIntent,
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(FeedActivity.this,0, resultIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
         mBuilder = new NotificationCompat.Builder(FeedActivity.this);
         mBuilder.setSmallIcon(R.mipmap.ic_launcher);
         mBuilder.setContentTitle("Pedido de amizade")
                 .setContentText("O usuário " + nome + " quer ser seu amigo")
-                .setAutoCancel(false)
+                .setAutoCancel(true)
                 .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
                 .setContentIntent(resultPendingIntent);
 
@@ -327,7 +319,7 @@ public class FeedActivity extends AppCompatActivity {
             mNotificationManager.createNotificationChannel(notificationChannel);
         }
         assert mNotificationManager != null;
-        mNotificationManager.notify(0 /* Request Code */, mBuilder.build());
+        mNotificationManager.notify(0, mBuilder.build());
     }
 
     @Override

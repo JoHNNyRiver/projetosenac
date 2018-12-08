@@ -2,9 +2,11 @@ package com.example.joao.facesenac.pi.activity.frames;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,7 @@ import android.widget.Toast;
 
 import com.example.joao.facesenac.R;
 import com.example.joao.facesenac.pi.activity.activity.FeedActivity;
+import com.example.joao.facesenac.pi.activity.activity.PerfilAmigoActivity;
 import com.example.joao.facesenac.pi.activity.interfaces.ApiUsers;
 import com.example.joao.facesenac.pi.activity.model.GetFriends;
 import com.example.joao.facesenac.pi.activity.model.RetornoAmigos;
@@ -71,9 +74,9 @@ public class AmigosFragment extends Fragment {
                 ArrayList<GetFriends> body = response.body();
                 progressBarLoading.setVisibility(View.GONE);
 
-                String status = "";
                 if (response.isSuccessful() && body != null) {
                     for (int i = 0; i < body.size(); i++) {
+                        String status = "";
                         if (body.get(i).getAmizade() != null) {
                             status = body.get(i).getAmizade();
                         }
@@ -102,11 +105,11 @@ public class AmigosFragment extends Fragment {
 
     }
 
-    public void addCard (String statusAmizade, String nome, Long id) {
+    public void addCard (String statusAmizade, final String nome, final Long id) {
         final CardView cardView = (CardView) LayoutInflater.from(ctx)
                 .inflate(R.layout.card_friends, mensagem, false);
 
-        ImageView imageAmigosLayout = cardView.findViewById(R.id.imageAmigosLayout);
+        ImageView imageAmigosLayout = cardView.findViewById(R.id.imageAmigoPerfil);
         TextView nomeAmigo = cardView.findViewById(R.id.nomeAmigo);
         TextView statusAmigo = cardView.findViewById(R.id.statusAmigo);
         final ImageView btnSolicita = cardView.findViewById(R.id.btnSolicita);
@@ -114,15 +117,36 @@ public class AmigosFragment extends Fragment {
         final ImageButton btnAceitar = cardView.findViewById(R.id.btnAceitar);
         EditText amizadeHiddenId = cardView.findViewById(R.id.amizadeHiddenId);
         final ProgressBar progressBarAmigos = cardView.findViewById(R.id.progressBarAmigos);
+        final ViewGroup nomedosAmigosF = cardView.findViewById(R.id.nomedosAmigosF);
 
         nomeAmigo.setText(nome);
         statusAmigo.setText(statusAmizade);
 
-        if (statusAmizade.equals("solicitante")) {
+        if (statusAmizade.equals("solicitado")) {
             statusAmigo.setText("Aceitar amizade?");
         }
 
-        idHidden = id;
+        final Long idHidden = id;
+
+        imageAmigosLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), PerfilAmigoActivity.class);
+                intent.putExtra("idPerfil", id);
+                intent.putExtra("nomePerfil", nome);
+                startActivity(intent);
+            }
+        });
+
+        nomedosAmigosF.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), PerfilAmigoActivity.class);
+                intent.putExtra("idPerfil", id);
+                intent.putExtra("nomePerfil", nome);
+                startActivity(intent);
+            }
+        });
 
         btnSolicita.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -133,7 +157,7 @@ public class AmigosFragment extends Fragment {
                         .build();
 
                 ApiUsers apiUsers = usersApi.create(ApiUsers.class);
-                Call<RetornoAmigos> call = apiUsers.putFriends(idPosts, idHidden);
+                Call<RetornoAmigos> call = apiUsers.postFriends(idPosts, idHidden);
 
                 progressBarAmigos.setVisibility(View.VISIBLE);
 
@@ -145,6 +169,7 @@ public class AmigosFragment extends Fragment {
 
                         if (response.isSuccessful() && body != null) {
                             btnSolicita.setVisibility(View.GONE);
+                            btnDeletaAmigo.setVisibility(View.VISIBLE);
                         }
                     }
 
@@ -205,7 +230,7 @@ public class AmigosFragment extends Fragment {
                         .build();
 
                 ApiUsers apiUsers = usersApi.create(ApiUsers.class);
-                Call<RetornoAmigos> call = apiUsers.postFriends(idPosts, idHidden);
+                Call<RetornoAmigos> call = apiUsers.putFriends(idPosts, idHidden);
 
                 progressBarAmigos.setVisibility(View.VISIBLE);
 
@@ -217,7 +242,6 @@ public class AmigosFragment extends Fragment {
 
                         if (response.isSuccessful() && body != null) {
                             btnAceitar.setVisibility(View.GONE);
-                            btnDeletaAmigo.setVisibility(View.VISIBLE);
                         }
                     }
 
@@ -246,16 +270,18 @@ public class AmigosFragment extends Fragment {
 
         imageLoaderPost.displayImage(urlPost, imageAmigosLayout, options);
 
-        if (statusAmizade.equals("solicitante") || statusAmizade.equals("amigos")) {
-            btnAceitar.setVisibility(View.INVISIBLE);
+        if (statusAmizade.equals("solicitante")) {
+            btnAceitar.setVisibility(View.GONE);
+            btnSolicita.setVisibility(View.GONE);
         }
 
         if (statusAmizade.equals("amigos")) {
             btnSolicita.setVisibility(View.GONE);
+            btnAceitar.setVisibility(View.GONE);
         }
 
         if (statusAmizade.equals("solicitado")) {
-            btnAceitar.setVisibility(View.GONE);
+            btnSolicita.setVisibility(View.GONE);
         }
 
         if (statusAmizade.equals("")) {

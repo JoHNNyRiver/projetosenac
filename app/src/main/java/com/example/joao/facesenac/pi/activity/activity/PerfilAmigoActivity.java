@@ -1,32 +1,23 @@
-package com.example.joao.facesenac.pi.activity.frames;
+package com.example.joao.facesenac.pi.activity.activity;
 
-
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.joao.facesenac.R;
-import com.example.joao.facesenac.pi.activity.activity.FeedActivity;
-import com.example.joao.facesenac.pi.activity.activity.PerfilAmigoActivity;
-import com.example.joao.facesenac.pi.activity.activity.PostImageActivity;
 import com.example.joao.facesenac.pi.activity.interfaces.ApiUsers;
 import com.example.joao.facesenac.pi.activity.model.Curtidas;
 import com.example.joao.facesenac.pi.activity.model.GetFeed;
-import com.example.joao.facesenac.pi.activity.model.PostFeed;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -41,48 +32,46 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class BlankFragment extends Fragment {
-    private EditText texto;
-    private ProgressBar pprogressBarPost;
-    private ProgressBar progressBarLoading;
-    private Long idPosts;
-    private FeedActivity activitie;
-    private ViewGroup mensagens;
-    private TextView idUser;
-    private TextView idHistorico;
-    private TextView nomeFeed;
-    private TextView dataFeed;
-    private TextView descFeed;
-    private ImageView imageFeedDesc;
-    private ImageView imagemFeed;
-    private Button comentar;
-    private Activity ctx;
-
-    public BlankFragment() {}
-
+public class PerfilAmigoActivity extends AppCompatActivity {
+    private ImageView imagemAmigoPerfil;
+    private TextView txtNomeDoAmigo;
+    private Long idInterno;
+    private ViewGroup mensagensTop;
+    private ProgressBar progress;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_blank, container, false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_perfil_amigo);
 
-        activitie = (FeedActivity) getActivity();
-        idPosts = activitie.returnId();
-        mensagens = view.findViewById(R.id.container);
-        ctx = getActivity();
+        ActionBar ab = getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
 
-        addCardPost();
-        addLoading();
-        callAddPost();
+        imagemAmigoPerfil = findViewById(R.id.imagemAmigoPerfilFuck);
+        txtNomeDoAmigo = findViewById(R.id.txtNomeDoAmigo);
+        mensagensTop = findViewById(R.id.containerAmigoPerfil);
+        progress = findViewById(R.id.progress);
 
-        return view;
-    }
+        Bundle bdl = getIntent().getExtras();
 
-    public void callAddPost() {
+        progress.setVisibility(View.VISIBLE);
+
+        txtNomeDoAmigo.setText(bdl.getString("nomePerfil"));
+        idInterno = bdl.getLong("idPerfil");
+
+        String urlPost = "https://pi4facenac.azurewebsites.net/PI4/api/users/image/" + idInterno;
+        ImageLoader imageLoaderPost = ImageLoader.getInstance();
+        imageLoaderPost.init(ImageLoaderConfiguration.createDefault(PerfilAmigoActivity.this));
+
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                .showImageOnLoading(R.drawable.loading_icon)
+                .showImageForEmptyUri(R.drawable.nouser)
+                .showImageOnFail(R.drawable.nouser)
+                .cacheInMemory(true)
+                .build();
+
+        imageLoaderPost.displayImage(urlPost, imagemAmigoPerfil, options);
+
         final OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .connectTimeout(180, TimeUnit.SECONDS)
                 .writeTimeout(180, TimeUnit.SECONDS)
@@ -90,16 +79,16 @@ public class BlankFragment extends Fragment {
                 .cache(null)
                 .build();
 
-        Retrofit retrofit2 = new Retrofit.Builder()
+        Retrofit retrofit3 = new Retrofit.Builder()
                 .client(okHttpClient)
-                .baseUrl("https://pi4facenac.azurewebsites.net/PI4/api/posts/")
+                .baseUrl("https://pi4facenac.azurewebsites.net/PI4/api/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        ApiUsers apiUsers = retrofit2.create(ApiUsers.class);
-        Call<ArrayList<GetFeed>> callPosts = apiUsers.getPosts(idPosts);
+        ApiUsers apiUsers = retrofit3.create(ApiUsers.class);
+        Call<ArrayList<GetFeed>> call = apiUsers.getMyPosts(idInterno);
 
-        Callback<ArrayList<GetFeed>> callbackPosts = new Callback<ArrayList<GetFeed>>() {
+        Callback<ArrayList<GetFeed>> callback = new Callback<ArrayList<GetFeed>>() {
             @Override
             public void onResponse(Call<ArrayList<GetFeed>> call, Response<ArrayList<GetFeed>> response) {
                 ArrayList<GetFeed> myposts = response.body();
@@ -114,8 +103,6 @@ public class BlankFragment extends Fragment {
 
 
                 if (response.code() == 200) {
-                    myposts.size();
-
                     if (response.isSuccessful()) {
                         for (int i = 0; i < myposts.size(); i++) {
                             if (myposts.get(i).getNomeUser() != null) {
@@ -148,7 +135,7 @@ public class BlankFragment extends Fragment {
                                     fotoUser, id, liked, myposts.get(i).getTemFoto());
                         }
 
-                        progressBarLoading.setVisibility(View.GONE);
+                        progress.setVisibility(View.GONE);
                     }
                 }
             }
@@ -156,38 +143,26 @@ public class BlankFragment extends Fragment {
             @Override
             public void onFailure(Call<ArrayList<GetFeed>> call, Throwable t) {
                 t.printStackTrace();
+                progress.setVisibility(View.GONE);
             }
         };
 
-        callPosts.enqueue(callbackPosts);
+        call.enqueue(callback);
+
     }
 
-    public void addCard(final String nome, String data, String desc, Integer curtidas, Long usuario, String fotoUser, final Long id, Boolean liked, Integer temFoto) {
-        if (!isAdded()) {
-            return;
-        }
-        final CardView cardView = (CardView) LayoutInflater.from(getActivity())
-                .inflate(R.layout.card_feed, mensagens, false);
+    public void addCard(String nome, String data, String desc, Integer curtidas, Long usuario, String fotoUser, Long id, Boolean liked, Integer temFoto) {
+        CardView cardView = (CardView) LayoutInflater.from(PerfilAmigoActivity.this)
+                .inflate(R.layout.card_feed, mensagensTop, false);
 
-        nomeFeed = cardView.findViewById(R.id.nomeFeed);
-        dataFeed = cardView.findViewById(R.id.dataFeed);
-        descFeed = cardView.findViewById(R.id.descFeed);
-        imageFeedDesc = cardView.findViewById(R.id.imageFeedDesc);
-        imagemFeed = cardView.findViewById(R.id.imagemFeed);
-        comentar = cardView.findViewById(R.id.comentar);
-        idUser = cardView.findViewById(R.id.idUser);
-        idHistorico = cardView.findViewById(R.id.idHistorico);
-
-        imagemFeed.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), PerfilAmigoActivity.class);
-                intent.putExtra("idPerfil", id);
-                intent.putExtra("nomePerfil", nome);
-                startActivity(intent);
-                cardView.destroyDrawingCache();
-            }
-        });
+        final TextView nomeFeed = cardView.findViewById(R.id.nomeFeed);
+        final TextView dataFeed = cardView.findViewById(R.id.dataFeed);
+        final TextView descFeed = cardView.findViewById(R.id.descFeed);
+        final ImageView imageFeedDesc = cardView.findViewById(R.id.imageFeedDesc);
+        final ImageView imagemFeed = cardView.findViewById(R.id.imagemFeed);
+        final Button comentar = cardView.findViewById(R.id.comentar);
+        final TextView idUser = cardView.findViewById(R.id.idUser);
+        final TextView idHistorico = cardView.findViewById(R.id.idHistorico);
 
         final TextView curtidaFeed = cardView.findViewById(R.id.curtidaFeed);
         final Button curtir = cardView.findViewById(R.id.curtir);
@@ -198,7 +173,7 @@ public class BlankFragment extends Fragment {
         comentar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent comment = new Intent(getActivity(), FeedActivity.CommentActivity.class);
+                Intent comment = new Intent(PerfilAmigoActivity.this, FeedActivity.CommentActivity.class);
                 startActivity(comment);
             }
         });
@@ -241,9 +216,9 @@ public class BlankFragment extends Fragment {
 
                             if (body.getStatus()) {
                                 curtir.setTextColor(getResources().getColor(R.color.bgbutton));
-                                Toast.makeText(getActivity(), "Curtido", Toast.LENGTH_LONG).show();
+                                Toast.makeText(PerfilAmigoActivity.this, "Curtido", Toast.LENGTH_LONG).show();
                             } else {
-                                Toast.makeText(getActivity(), "Descurtido", Toast.LENGTH_LONG).show();
+                                Toast.makeText(PerfilAmigoActivity.this, "Descurtido", Toast.LENGTH_LONG).show();
                                 curtir.setTextColor(getResources().getColor(R.color.facesenac));
                             }
                         }
@@ -264,7 +239,7 @@ public class BlankFragment extends Fragment {
 
         String url = "https://pi4facenac.azurewebsites.net/PI4/api/users/image/" + usuario;
         ImageLoader imageLoader = ImageLoader.getInstance();
-        imageLoader.init(ImageLoaderConfiguration.createDefault(getActivity()));
+        imageLoader.init(ImageLoaderConfiguration.createDefault(PerfilAmigoActivity.this));
 
         DisplayImageOptions optionsOne = new DisplayImageOptions.Builder()
                 .showImageOnLoading(R.drawable.loading_icon)
@@ -284,7 +259,7 @@ public class BlankFragment extends Fragment {
 
         String urlPost = "https://pi4facenac.azurewebsites.net/PI4/api/posts/image/" + id;
         ImageLoader imageLoaderPost = ImageLoader.getInstance();
-        imageLoaderPost.init(ImageLoaderConfiguration.createDefault(getActivity()));
+        imageLoaderPost.init(ImageLoaderConfiguration.createDefault(PerfilAmigoActivity.this));
 
         if (temFoto == 1) {
             imageLoaderPost.displayImage(urlPost, imageFeedDesc, options);
@@ -308,117 +283,6 @@ public class BlankFragment extends Fragment {
         dataFeed.setText(modifiedData);
 
 
-        mensagens.addView(cardView);
+        mensagensTop.addView(cardView);
     }
-
-    public  void addCardPost() {
-        CardView cardView = (CardView) LayoutInflater.from(getActivity())
-                .inflate(R.layout.card_post, mensagens, false);
-
-        ImageButton btnEnviar = cardView.findViewById(R.id.btnEnviar);
-        ImageButton imageButton = cardView.findViewById(R.id.imageButton);
-        pprogressBarPost = cardView.findViewById(R.id.progressBarPost);
-        texto = cardView.findViewById(R.id.textoPostagem);
-
-        btnEnviar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FeedActivity activity = (FeedActivity) getActivity();
-                Long id = activity.returnId();
-
-                closeKeyboard();
-
-                pprogressBarPost.setVisibility(View.VISIBLE);
-                texto.setVisibility(View.GONE);
-
-                Retrofit postFeed = new Retrofit.Builder()
-                        .baseUrl("https://pi4facenac.azurewebsites.net/PI4/api/")
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .build();
-
-                ApiUsers apiFeed = postFeed.create(ApiUsers.class);
-                String textoValue = texto.getText().toString();
-                String fotoValue = "";
-
-                PostFeed postFeeder = new PostFeed();
-                postFeeder.setTexto(textoValue);
-                postFeeder.setUsuario(id);
-                postFeeder.setFoto(fotoValue);
-
-
-                Call<Long> callFeed = apiFeed.postFeed(postFeeder);
-
-                Callback<Long> callback = new Callback<Long>() {
-                    @Override
-                    public void onResponse(Call<Long> call, Response<Long> response) {
-                        Long resposta = response.body();
-
-                        if (response.code() == 200) {
-                            if (response.isSuccessful() && resposta != null) {
-                                Toast.makeText(getActivity(),
-                                        "Postado com sucesso",
-                                        Toast.LENGTH_LONG).show();
-
-                                texto.setText("");
-                                texto.setVisibility(View.VISIBLE);
-                                pprogressBarPost.setVisibility(View.GONE);
-                            } else {
-                                Toast.makeText(getActivity(),
-                                        "Houve um erro, 1!",
-                                        Toast.LENGTH_LONG).show();
-                                pprogressBarPost.setVisibility(View.GONE);
-                                texto.setVisibility(View.VISIBLE);
-                            }
-                        } else {
-                            Toast.makeText(getActivity(),
-                                    "Houve um erro, 2!",
-                                    Toast.LENGTH_LONG).show();
-                            pprogressBarPost.setVisibility(View.GONE);
-                            texto.setVisibility(View.VISIBLE);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<Long> call, Throwable t) {
-                        t.printStackTrace();
-
-                        Toast.makeText(getActivity(),
-                                "Houve um erro,  tente novamente!",
-                                Toast.LENGTH_LONG).show();
-                        texto.setVisibility(View.VISIBLE);
-                    }
-                };
-
-                callFeed.enqueue(callback);
-            }
-        });
-
-        imageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent imageChoice = new Intent(getActivity(), PostImageActivity.class);
-                startActivity(imageChoice);
-            }
-        });
-
-        mensagens.addView(cardView);
-    }
-
-    public void addLoading() {
-        CardView cardView = (CardView) LayoutInflater.from(getActivity())
-                .inflate(R.layout.loading, mensagens, false);
-
-        progressBarLoading = cardView.findViewById(R.id.progressBarLoading);
-        mensagens.addView(cardView);
-    }
-
-    private void closeKeyboard(){
-        View view = getActivity().getCurrentFocus();
-        if(view != null){
-            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-
-    }
-
 }

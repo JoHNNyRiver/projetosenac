@@ -29,7 +29,13 @@
             android:parentActivityName=".pi.activity.activity.FeedActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeTwo" />
-        <activity android:name=".pi.activity.activity.FeedActivity$CommentActivity" android:theme="@style/AppThemeTwo"></activity>
+        <activity
+            android:name=".pi.activity.activity.FeedActivity$CommentActivity"
+            android:theme="@style/AppThemeTwo" />
+        <activity android:name=".pi.activity.activity.PerfilAmigoActivity"
+            android:parentActivityName=".pi.activity.activity.FeedActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeTwo"></activity>
     </application>
 
 </manifest>
