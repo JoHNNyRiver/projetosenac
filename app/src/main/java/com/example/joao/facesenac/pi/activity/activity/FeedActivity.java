@@ -1,10 +1,16 @@
 package com.example.joao.facesenac.pi.activity.activity;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.os.Build;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.NotificationCompat;
@@ -49,6 +55,9 @@ public class FeedActivity extends AppCompatActivity {
     private String nome;
     private String emailTwo;
     private String senha;
+    private int idNotify;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,8 +149,8 @@ public class FeedActivity extends AppCompatActivity {
                     for (int i = 0; i < body.size(); i++) {
 
                         if (body.get(i).getAmizade() != null) {
-                            if (body.get(i).getAmizade().equals("solicitante")) {
-                                notificarUsuario(body.get(i).getNome());
+                            if (body.get(i).getAmizade().equals("solicitado")) {
+                                createNotification(body.get(i).getNome());
                             }
                         }
                     }
@@ -150,7 +159,7 @@ public class FeedActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ArrayList<GetFriends>> call, Throwable t) {
-
+                t.printStackTrace();
             }
         };
 
@@ -280,25 +289,51 @@ public class FeedActivity extends AppCompatActivity {
         }
     }
 
-    public void notificarUsuario(String nome) {
-        Intent intent = new Intent(this, FeedActivity.class);
+    public static final String NOTIFICATION_CHANNEL_ID = "10001";
+    private NotificationManager mNotificationManager;
+    private NotificationCompat.Builder mBuilder;
 
-        intent.putExtra("amigos", true);
+    public void createNotification(String nome)
+    {
+        /**Creates an explicit intent for an Activity in your app**/
+        Intent resultIntent = new Intent(FeedActivity.this , FeedActivity.class);
+        resultIntent.putExtra("amigos", true);
+        resultIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        int id = (int) (Math.random() * 100);
-        PendingIntent pi = PendingIntent.getActivity(this, 0, intent, 0);
+        PendingIntent resultPendingIntent = PendingIntent.getActivity(FeedActivity.this,
+                0 /* Request code */, resultIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
 
-        NotificationCompat.Builder notification = new NotificationCompat.Builder(this);
-        notification.setSmallIcon(R.drawable.notificanois);
-        notification.setTicker("Pedido de amizade");
-        notification.setContentTitle("Pedido de amizade");
-        notification.setContentText("O usuario " + nome + " quer ser seu amigo");
-        notification.setPriority(NotificationCompat.PRIORITY_DEFAULT);
-        notification.setContentIntent(pi);
-        notification.setAutoCancel(true);
+        mBuilder = new NotificationCompat.Builder(FeedActivity.this);
+        mBuilder.setSmallIcon(R.mipmap.ic_launcher);
+        mBuilder.setContentTitle("Pedido de amizade")
+                .setContentText("O usuário " + nome + " quer ser seu amigo")
+                .setAutoCancel(false)
+                .setSound(Settings.System.DEFAULT_NOTIFICATION_URI)
+                .setContentIntent(resultPendingIntent);
 
+        mNotificationManager = (NotificationManager) FeedActivity.this.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O)
+        {
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "NOTIFICATION_CHANNEL_NAME", importance);
+            notificationChannel.enableLights(true);
+            notificationChannel.setLightColor(Color.RED);
+            notificationChannel.enableVibration(true);
+            notificationChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+            assert mNotificationManager != null;
+            mBuilder.setChannelId(NOTIFICATION_CHANNEL_ID);
+            mNotificationManager.createNotificationChannel(notificationChannel);
+        }
+        assert mNotificationManager != null;
+        mNotificationManager.notify(0 /* Request Code */, mBuilder.build());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         NotificationManagerCompat nm = NotificationManagerCompat.from(this);
-        nm.notify(id, notification.build());
+        nm.cancel(idNotify);
     }
 }

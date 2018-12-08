@@ -1,9 +1,9 @@
 package com.example.joao.facesenac.pi.activity.model;
 
-public class getDeleteAmigo {
+public class RetornoAmigos {
     private String mensagem;
 
-    public getDeleteAmigo() {}
+    public RetornoAmigos() {}
 
     public String getMensagem() {
         return mensagem;

@@ -5,10 +5,9 @@ import com.example.joao.facesenac.pi.activity.model.GetFeed;
 import com.example.joao.facesenac.pi.activity.model.GetFriends;
 import com.example.joao.facesenac.pi.activity.model.PostFeed;
 import com.example.joao.facesenac.pi.activity.model.PostUserLogin;
-import com.example.joao.facesenac.pi.activity.model.PutAmigos;
 import com.example.joao.facesenac.pi.activity.model.SigninBody;
 import com.example.joao.facesenac.pi.activity.model.SignupBody;
-import com.example.joao.facesenac.pi.activity.model.getDeleteAmigo;
+import com.example.joao.facesenac.pi.activity.model.RetornoAmigos;
 
 import java.util.ArrayList;
 
@@ -51,13 +50,13 @@ public interface ApiUsers {
     Call<ArrayList<GetFriends>> getFriendsAPI(@Path("id") Long id);
 
     @DELETE("friends/{idUsuario}/{idAmizade}")
-    Call<getDeleteAmigo> deletAmizade(@Path("idUsuario") Long idUsuario, @Path("idAmizade") Long idAmizade);
+    Call<RetornoAmigos> deletAmizade(@Path("idUsuario") Long idUsuario, @Path("idAmizade") Long idAmizade);
 
     @PUT("friends/{idUsuario}/{idAmizade}")
-    Call<getDeleteAmigo> putFriends(@Path("idUsuario") Long idUsuario, @Path("idAmizade") Long idAmizade);
+    Call<RetornoAmigos> putFriends(@Path("idUsuario") Long idUsuario, @Path("idAmizade") Long idAmizade);
 
     @POST("friends/{idUsuario}/{idAmizade}")
-    Call<getDeleteAmigo> postFriends(@Path("idUsuario") Long idUsuario, @Path("idAmizade") Long idAmizade);
+    Call<RetornoAmigos> postFriends(@Path("idUsuario") Long idUsuario, @Path("idAmizade") Long idAmizade);
 
     @GET("posts/{id}")
     Call<ArrayList<GetFeed>> getMyPosts(@Path("id") Long id);

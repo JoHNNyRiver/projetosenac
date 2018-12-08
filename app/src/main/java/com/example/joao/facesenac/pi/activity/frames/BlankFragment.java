@@ -161,6 +161,9 @@ public class BlankFragment extends Fragment {
     }
 
     public void addCard(String nome, String data, String desc, Integer curtidas, Long usuario, String fotoUser, Long id, Boolean liked, Integer temFoto) {
+        if (!isAdded()) {
+            return;
+        }
         CardView cardView = (CardView) LayoutInflater.from(getActivity())
                 .inflate(R.layout.card_feed, mensagens, false);
 

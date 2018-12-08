@@ -66,11 +66,11 @@
                 android:visibility="gone" />
 
             <ImageView
-                android:id="@+id/buttonAmigosAdicionaLayout"
-                android:layout_width="wrap_content"
+                android:id="@+id/btnSolicita"
+                android:layout_width="15dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                app:srcCompat="@android:drawable/button_onoff_indicator_on" />
+                app:srcCompat="@android:drawable/ic_input_add" />
 
             <ImageButton
                 android:id="@+id/btnAceitar"
@@ -80,10 +80,10 @@
                 android:layout_weight="1"
                 android:background="@android:color/background_light"
                 android:elevation="0dp"
-                android:src="@android:drawable/ic_input_add" />
+                android:src="@drawable/ic_check_black_24dp" />
 
             <ImageButton
-                android:id="@+id/buttonAmigosDeletaLayout"
+                android:id="@+id/btnDeletaAmigo"
                 style="@android:style/Widget.Material.Light.ImageButton"
                 android:layout_width="14dp"
                 android:layout_height="match_parent"

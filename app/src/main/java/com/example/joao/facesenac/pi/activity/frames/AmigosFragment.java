@@ -19,8 +19,7 @@ import com.example.joao.facesenac.R;
 import com.example.joao.facesenac.pi.activity.activity.FeedActivity;
 import com.example.joao.facesenac.pi.activity.interfaces.ApiUsers;
 import com.example.joao.facesenac.pi.activity.model.GetFriends;
-import com.example.joao.facesenac.pi.activity.model.PutAmigos;
-import com.example.joao.facesenac.pi.activity.model.getDeleteAmigo;
+import com.example.joao.facesenac.pi.activity.model.RetornoAmigos;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -32,8 +31,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
-import static android.content.Context.NOTIFICATION_SERVICE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -112,8 +109,8 @@ public class AmigosFragment extends Fragment {
         ImageView imageAmigosLayout = cardView.findViewById(R.id.imageAmigosLayout);
         TextView nomeAmigo = cardView.findViewById(R.id.nomeAmigo);
         TextView statusAmigo = cardView.findViewById(R.id.statusAmigo);
-        final ImageView buttonAmigosAdicionaLayout = cardView.findViewById(R.id.buttonAmigosAdicionaLayout);
-        ImageButton buttonAmigosDeletaLayout = cardView.findViewById(R.id.buttonAmigosDeletaLayout);
+        final ImageView btnSolicita = cardView.findViewById(R.id.btnSolicita);
+        final ImageButton btnDeletaAmigo = cardView.findViewById(R.id.btnDeletaAmigo);
         final ImageButton btnAceitar = cardView.findViewById(R.id.btnAceitar);
         EditText amizadeHiddenId = cardView.findViewById(R.id.amizadeHiddenId);
         final ProgressBar progressBarAmigos = cardView.findViewById(R.id.progressBarAmigos);
@@ -127,7 +124,7 @@ public class AmigosFragment extends Fragment {
 
         idHidden = id;
 
-        buttonAmigosAdicionaLayout.setOnClickListener(new View.OnClickListener() {
+        btnSolicita.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Retrofit usersApi = new Retrofit.Builder()
@@ -136,23 +133,23 @@ public class AmigosFragment extends Fragment {
                         .build();
 
                 ApiUsers apiUsers = usersApi.create(ApiUsers.class);
-                Call<getDeleteAmigo> call = apiUsers.putFriends(idPosts, idHidden);
+                Call<RetornoAmigos> call = apiUsers.putFriends(idPosts, idHidden);
 
                 progressBarAmigos.setVisibility(View.VISIBLE);
 
-                Callback<getDeleteAmigo> callback = new Callback<getDeleteAmigo>() {
+                Callback<RetornoAmigos> callback = new Callback<RetornoAmigos>() {
                     @Override
-                    public void onResponse(Call<getDeleteAmigo> call, Response<getDeleteAmigo> response) {
-                        getDeleteAmigo body = response.body();
+                    public void onResponse(Call<RetornoAmigos> call, Response<RetornoAmigos> response) {
+                        RetornoAmigos body = response.body();
                         progressBarAmigos.setVisibility(View.GONE);
 
                         if (response.isSuccessful() && body != null) {
-                            buttonAmigosAdicionaLayout.setVisibility(View.INVISIBLE);
+                            btnSolicita.setVisibility(View.GONE);
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<getDeleteAmigo> call, Throwable t) {
+                    public void onFailure(Call<RetornoAmigos> call, Throwable t) {
                         t.printStackTrace();
                         progressBarAmigos.setVisibility(View.GONE);
                         Toast.makeText(getActivity(), "Erro", Toast.LENGTH_LONG).show();
@@ -163,7 +160,7 @@ public class AmigosFragment extends Fragment {
             }
         });
 
-        buttonAmigosDeletaLayout.setOnClickListener(new View.OnClickListener() {
+        btnDeletaAmigo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Retrofit usersApi = new Retrofit.Builder()
@@ -172,14 +169,14 @@ public class AmigosFragment extends Fragment {
                         .build();
 
                 ApiUsers apiUsers = usersApi.create(ApiUsers.class);
-                Call<getDeleteAmigo> call = apiUsers.deletAmizade(idPosts, idHidden);
+                Call<RetornoAmigos> call = apiUsers.deletAmizade(idPosts, idHidden);
 
                 progressBarAmigos.setVisibility(View.VISIBLE);
 
-                Callback<getDeleteAmigo> callback = new Callback<getDeleteAmigo>() {
+                Callback<RetornoAmigos> callback = new Callback<RetornoAmigos>() {
                     @Override
-                    public void onResponse(Call<getDeleteAmigo> call, Response<getDeleteAmigo> response) {
-                        getDeleteAmigo body = response.body();
+                    public void onResponse(Call<RetornoAmigos> call, Response<RetornoAmigos> response) {
+                        RetornoAmigos body = response.body();
                         progressBarAmigos.setVisibility(View.GONE);
 
                         if (response.isSuccessful() && body != null) {
@@ -188,7 +185,7 @@ public class AmigosFragment extends Fragment {
                     }
 
                     @Override
-                    public void onFailure(Call<getDeleteAmigo> call, Throwable t) {
+                    public void onFailure(Call<RetornoAmigos> call, Throwable t) {
                         t.printStackTrace();
                         progressBarAmigos.setVisibility(View.GONE);
                         Toast.makeText(getActivity(), "Erro", Toast.LENGTH_LONG).show();
@@ -208,23 +205,24 @@ public class AmigosFragment extends Fragment {
                         .build();
 
                 ApiUsers apiUsers = usersApi.create(ApiUsers.class);
-                Call<getDeleteAmigo> call = apiUsers.postFriends(idPosts, idHidden);
+                Call<RetornoAmigos> call = apiUsers.postFriends(idPosts, idHidden);
 
                 progressBarAmigos.setVisibility(View.VISIBLE);
 
-                Callback<getDeleteAmigo> callback = new Callback<getDeleteAmigo>() {
+                Callback<RetornoAmigos> callback = new Callback<RetornoAmigos>() {
                     @Override
-                    public void onResponse(Call<getDeleteAmigo> call, Response<getDeleteAmigo> response) {
-                        getDeleteAmigo body = response.body();
+                    public void onResponse(Call<RetornoAmigos> call, Response<RetornoAmigos> response) {
+                        RetornoAmigos body = response.body();
                         progressBarAmigos.setVisibility(View.GONE);
 
                         if (response.isSuccessful() && body != null) {
-                            btnAceitar.setVisibility(View.INVISIBLE);
+                            btnAceitar.setVisibility(View.GONE);
+                            btnDeletaAmigo.setVisibility(View.VISIBLE);
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<getDeleteAmigo> call, Throwable t) {
+                    public void onFailure(Call<RetornoAmigos> call, Throwable t) {
                         t.printStackTrace();
                         Toast.makeText(getActivity(), "Erro", Toast.LENGTH_LONG).show();
                         progressBarAmigos.setVisibility(View.GONE);
@@ -252,8 +250,17 @@ public class AmigosFragment extends Fragment {
             btnAceitar.setVisibility(View.INVISIBLE);
         }
 
+        if (statusAmizade.equals("amigos")) {
+            btnSolicita.setVisibility(View.GONE);
+        }
+
+        if (statusAmizade.equals("solicitado")) {
+            btnAceitar.setVisibility(View.GONE);
+        }
+
         if (statusAmizade.equals("")) {
-            buttonAmigosAdicionaLayout.setVisibility(View.GONE);
+            btnAceitar.setVisibility(View.GONE);
+            btnDeletaAmigo.setVisibility(View.GONE);
             statusAmigo.setText("Adicione " + nome + " como amigo");
         }
 
